@@ -1,0 +1,41 @@
+package main
+
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+	"github.com/karinar4/FP-EAS-PBKK/internal/configs"
+	"github.com/karinar4/FP-EAS-PBKK/internal/middleware"
+)
+
+func main() {
+	// Setup configuration
+	if err := configs.Setup(".env"); err != nil {
+		panic(err)
+	}
+
+	// Setup for production
+	if configs.Config.ENV_MODE == "production" {
+		gin.SetMode(gin.ReleaseMode)
+		fmt.Println("Production mode")
+	}
+
+	// Start the server
+	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
+	// Setup Database
+	// db, err  := database.New()
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong test",
+		})
+	})
+
+	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
+		panic(err)
+	}
+}
