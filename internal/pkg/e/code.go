@@ -43,4 +43,9 @@ const (
 	ERROR_GET_AES_KEY                 = 30015
 	ERROR_STORE_RSA_PRIVATE_KEY       = 30016
 	ERROR_DECODE_AES_KEY              = 30017
+	ErrDatabaseCreateFailed           = 30018
+	ErrDatabaseFetchFailed            = 30019
+	ErrDatabaseUpdateFailed           = 30020
+	ErrDatabaseDeleteFailed           = 30021
+	ErrNotFound                       = 30022
 )

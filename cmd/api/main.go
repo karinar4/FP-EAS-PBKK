@@ -8,6 +8,7 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/internal/database"
 	"github.com/karinar4/FP-EAS-PBKK/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/internal/modules/auth"
+	"github.com/karinar4/FP-EAS-PBKK/internal/modules/merk"
 )
 
 func main() {
@@ -41,6 +42,10 @@ func main() {
 	var authRepository auth.IAuthRepository = auth.NewAuthRepository(db)
 	var authService auth.IAuthUseCase = auth.NewAuthUseCase(authRepository)
 	auth.NewAuthHandler(r, authService, "/api/v1/auth")
+
+	var merkRepository merk.IMerkRepository = merk.NewMerkRepository(db)
+	var merkService merk.IMerkUseCase = merk.NewMerkUseCase(merkRepository)
+	merk.NewMerkHandler(r, merkService, "/api/v1/merk")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)

@@ -20,7 +20,7 @@ type (
 		Password string  `gorm:"type:varchar(255);not null"`
 		Telepon  *string `gorm:"type:varchar(15)"`
 		Alamat   *string `gorm:"type:varchar(255)"`
-		Role     string  `gorm:"type:varchar(10);not null;default:'user'"`
+		Role     string  `gorm:"type:enum('user', 'admin');not null;default:'user'"`
 	}
 
 	PayloadToken struct {
