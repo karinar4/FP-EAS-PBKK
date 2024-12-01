@@ -9,6 +9,7 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/internal/modules/merk"
+	"github.com/karinar4/FP-EAS-PBKK/cmd/migration"
 )
 
 func main() {
@@ -30,6 +31,11 @@ func main() {
 	// Setup Database
 	db, err := database.New()
 	if err != nil {
+		panic(err)
+	}
+
+	// Run migration for all models
+	if err := migration.Migration(db); err != nil {
 		panic(err)
 	}
 
