@@ -8,31 +8,31 @@ type (
 
 	LoginUserResponseDTO struct {
 		Email string `json:"email"`
-		Roles string `json:"roles"`
+		Role string `json:"role"`
 		Token string `json:"token"`
 	}
 
 	RegisterUserRequestDTO struct {
-		Nama            string `json:"nama" binding:"required"`
+		Name            string `json:"name" binding:"required"`
 		Email           string `json:"email" binding:"required,email"`
 		Password        string `json:"password" binding:"required"`
 		ConfirmPassword string `json:"confirm_password" binding:"required"`
 	}
 
 	RegisterUserResponseDTO struct {
-		Nama  string `json:"nama"`
+		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
 
 	GetMeResponseDTO struct {
-		Nama  string `json:"nama"`
+		Name  string `json:"name"`
 		Email string `json:"email"`
-		Roles string `json:"roles"`
+		Role string `json:"role"`
 	}
 
 	GetUser struct {
 		ID    string `json:"id"`
-		Nama  string `json:"nama"`
+		Name  string `json:"name"`
 		Email string `json:"email"`
 	}
 

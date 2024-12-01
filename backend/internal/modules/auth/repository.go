@@ -27,7 +27,7 @@ func (r *authRepository) RegisterUser(data *RegisterUserDomain) e.ApiError {
 		BaseModels: common.BaseModels{
 			ID: data.Id,
 		},
-		Nama:     data.Nama,
+		Name:     data.Name,
 		Email:    data.Email,
 		Password: data.Password,
 	}

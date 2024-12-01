@@ -49,7 +49,7 @@ func (uc *authUseCase) RegisterUser(data *RegisterUserRequestDTO) e.ApiError {
 
 	user := &RegisterUserDomain{
 		Id:       uuid.New(),
-		Nama:     data.Nama,
+		Name:     data.Name,
 		Email:    data.Email,
 		Password: hashedPassword,
 	}
@@ -84,7 +84,7 @@ func (uc *authUseCase) LoginUser(data *LoginUserRequestDTO) (*LoginUserResponseD
 
 	return &LoginUserResponseDTO{
 		Email: user.Email,
-		Roles: user.Role,
+		Role: user.Role,
 		Token: token,
 	}, nil
 }
@@ -95,9 +95,9 @@ func (uc *authUseCase) GetMe(userID uuid.UUID) (*GetMeResponseDTO, e.ApiError) {
 		return &GetMeResponseDTO{}, e.NewApiError(404, "User not found")
 	}
 	return &GetMeResponseDTO{
-		Nama:  user.Nama,
+		Name:  user.Name,
 		Email: user.Email,
-		Roles: user.Role,
+		Role: user.Role,
 	}, nil
 }
 
@@ -140,7 +140,7 @@ func (uc *authUseCase) GetAllUser() (*GetAllUsersResponseDTO, e.ApiError) {
 	for _, user := range users {
 		response = append(response, GetUser{
 			ID:    user.ID.String(),
-			Nama:  user.Nama,
+			Name:  user.Name,
 			Email: user.Email,
 		})
 	}
@@ -160,7 +160,7 @@ func (uc *authUseCase) GetUserByEmail(email string) (*GetUser, e.ApiError) {
 	}
 	return &GetUser{
 		ID:    user.ID.String(),
-		Nama:  user.Nama,
+		Name:  user.Name,
 		Email: user.Email,
 	}, nil
 }

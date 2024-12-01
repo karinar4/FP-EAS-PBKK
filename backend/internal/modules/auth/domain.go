@@ -8,18 +8,18 @@ import (
 type (
 	RegisterUserDomain struct {
 		Id       uuid.UUID
-		Nama     string
+		Name     string
 		Email    string
 		Password string
 	}
 
 	UserModel struct {
 		common.BaseModels
-		Nama     string  `gorm:"type:varchar(255);not null"`
+		Name    string  `gorm:"type:varchar(255);not null"`
 		Email    string  `gorm:"type:varchar(255);not null;unique"`
 		Password string  `gorm:"type:varchar(255);not null"`
-		Telepon  *string `gorm:"type:varchar(15)"`
-		Alamat   *string `gorm:"type:varchar(255)"`
+		Telephone  *string `gorm:"type:varchar(15)"`
+		Address   *string `gorm:"type:varchar(255)"`
 		Role     string  `gorm:"type:enum('user', 'admin');not null;default:'user'"`
 	}
 

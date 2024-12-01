@@ -8,7 +8,8 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/database"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
-	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/merk"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/cmd/migration"
 )
 
@@ -49,9 +50,13 @@ func main() {
 	var authService auth.IAuthUseCase = auth.NewAuthUseCase(authRepository)
 	auth.NewAuthHandler(r, authService, "/api/v1/auth")
 
-	var merkRepository merk.IMerkRepository = merk.NewMerkRepository(db)
-	var merkService merk.IMerkUseCase = merk.NewMerkUseCase(merkRepository)
-	merk.NewMerkHandler(r, merkService, "/api/v1/merk")
+	var brandRepository brand.IBrandRepository = brand.NewBrandRepository(db)
+	var brandService brand.IBrandUseCase = brand.NewBrandUseCase(brandRepository)
+	brand.NewBrandHandler(r, brandService, "/api/v1/brand")
+
+	var categoryRepository category.ICategoryRepository = category.NewCategoryRepository(db)
+	var categoryService category.ICategoryUseCase = category.NewCategoryUseCase(categoryRepository)
+	category.NewCategoryHandler(r, categoryService, "/api/v1/category")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)
