@@ -1,4 +1,4 @@
-module github.com/karinar4/FP-EAS-PBKK
+module github.com/karinar4/FP-EAS-PBKK/backend
 
 go 1.23.1
 
