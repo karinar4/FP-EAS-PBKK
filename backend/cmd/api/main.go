@@ -4,13 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/karinar4/FP-EAS-PBKK/backend/cmd/migration"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/configs"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/database"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
-	"github.com/karinar4/FP-EAS-PBKK/backend/cmd/migration"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
 )
 
 func main() {
@@ -57,6 +58,10 @@ func main() {
 	var categoryRepository category.ICategoryRepository = category.NewCategoryRepository(db)
 	var categoryService category.ICategoryUseCase = category.NewCategoryUseCase(categoryRepository)
 	category.NewCategoryHandler(r, categoryService, "/api/v1/category")
+
+	var productRepository product.IProductRepository = product.NewProductRepository(db)
+	var productService product.IProductUseCase = product.NewProductUseCase(productRepository)
+	product.NewProductHandler(r, productService, "/api/v1/product")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)
