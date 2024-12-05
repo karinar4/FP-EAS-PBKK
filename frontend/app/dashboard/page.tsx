@@ -1,25 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import LogoutButton from '../components/LogoutButton';
 
-const DashboardPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    // Check if the auth-token exists in cookies
-    const token = document.cookie.split('; ').find(row => row.startsWith('auth-token='));
-
-    if (!token) {
-      router.push('/login');
-    }
-  }, [router]);
-
+const Dashboard = () => {
   return (
     <div>
-      <h1>Welcome to your Dashboard!</h1>
+      <h1>Welcome to the Dashboard</h1>
+      <LogoutButton />
     </div>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;
