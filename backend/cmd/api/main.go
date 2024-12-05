@@ -12,6 +12,8 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/transaction"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/payment"
 )
 
 func main() {
@@ -62,6 +64,14 @@ func main() {
 	var productRepository product.IProductRepository = product.NewProductRepository(db)
 	var productService product.IProductUseCase = product.NewProductUseCase(productRepository)
 	product.NewProductHandler(r, productService, "/api/v1/product")
+
+	var transactionRepository transaction.ITransactionRepository = transaction.NewTransactionRepository(db)
+	var transactionService transaction.ITransactionUseCase = transaction.NewTransactionUseCase(transactionRepository)
+	transaction.NewTransactionHandler(r, transactionService, "/api/v1/transaction")
+
+	var paymentRepository payment.IPaymentRepository = payment.NewPaymentRepository(db)
+	var paymentService payment.IPaymentUseCase = payment.NewPaymentUseCase(paymentRepository)
+	payment.NewPaymentHandler(r, paymentService, "/api/v1/payment")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)
