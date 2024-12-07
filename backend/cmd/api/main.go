@@ -11,6 +11,7 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
 )
 
@@ -62,6 +63,10 @@ func main() {
 	var productRepository product.IProductRepository = product.NewProductRepository(db)
 	var productService product.IProductUseCase = product.NewProductUseCase(productRepository)
 	product.NewProductHandler(r, productService, "/api/v1/product")
+
+	var imageRepository image.IImageRepository = image.NewImageRepository(db)
+	var imageService image.IImageUseCase = image.NewImageUseCase(imageRepository)
+	image.NewImageHandler(r, imageService, "/api/v1/image")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)
