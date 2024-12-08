@@ -34,7 +34,7 @@ func (r *transactionRepository) CreateTransaction(data *TransactionModel) (*Tran
 
 func (r *transactionRepository) GetAllTransaction() ([]TransactionModel, e.ApiError) {
 	var transactions []TransactionModel
-	if err := r.db.Find(&transactions).Error; err != nil {
+	if err := r.db.Preload("User").Find(&transactions).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
 	}
 	return transactions, nil

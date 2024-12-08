@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -39,6 +40,7 @@ func (h *TransactionHandler) Routes(prefix string) {
 func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 	var req CreateTransactionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, app.NewErrorResponse("Invalid request payload", nil))
 		return
 	}

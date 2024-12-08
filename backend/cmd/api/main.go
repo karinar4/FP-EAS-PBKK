@@ -12,9 +12,10 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
-	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
-	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/transaction"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/payment"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product_transaction"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/transaction"
 )
 
 func main() {
@@ -66,8 +67,12 @@ func main() {
 	var productService product.IProductUseCase = product.NewProductUseCase(productRepository)
 	product.NewProductHandler(r, productService, "/api/v1/product")
 
+	var productTransactionRepository product_transaction.IProductTransactionRepository = product_transaction.NewProductTransactionRepository(db)
+	var productTransactionService product_transaction.IProductTransactionUseCase = product_transaction.NewProductTransactionUseCase(productTransactionRepository)
+	product_transaction.NewProductTransactionHandler(r, productTransactionService, "/api/v1/product_transaction")
+
 	var transactionRepository transaction.ITransactionRepository = transaction.NewTransactionRepository(db)
-	var transactionService transaction.ITransactionUseCase = transaction.NewTransactionUseCase(transactionRepository)
+	var transactionService transaction.ITransactionUseCase = transaction.NewTransactionUseCase(transactionRepository, productTransactionRepository)
 	transaction.NewTransactionHandler(r, transactionService, "/api/v1/transaction")
 
 	var paymentRepository payment.IPaymentRepository = payment.NewPaymentRepository(db)

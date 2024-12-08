@@ -48,7 +48,7 @@ func (uc *authUseCase) RegisterUser(data *RegisterUserRequestDTO) e.ApiError {
 	}
 
 	user := &RegisterUserDomain{
-		Id:       uuid.New(),
+		ID:       uuid.New(),
 		Name:     data.Name,
 		Email:    data.Email,
 		Password: hashedPassword,
@@ -139,7 +139,7 @@ func (uc *authUseCase) GetAllUser() (*GetAllUsersResponseDTO, e.ApiError) {
 	var response []GetUser
 	for _, user := range users {
 		response = append(response, GetUser{
-			ID:    user.ID.String(),
+			ID:    user.ID,
 			Name:  user.Name,
 			Email: user.Email,
 		})
@@ -159,7 +159,7 @@ func (uc *authUseCase) GetUserByEmail(email string) (*GetUser, e.ApiError) {
 		return nil, e.NewApiError(500, fmt.Sprintf("Internal Server Error (%d)", err.Code()))
 	}
 	return &GetUser{
-		ID:    user.ID.String(),
+		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 	}, nil

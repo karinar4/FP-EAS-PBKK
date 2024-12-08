@@ -7,7 +7,7 @@ import (
 
 type (
 	RegisterUserDomain struct {
-		Id       uuid.UUID
+		ID       uuid.UUID
 		Name     string
 		Email    string
 		Password string

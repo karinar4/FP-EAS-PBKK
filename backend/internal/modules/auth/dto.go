@@ -1,5 +1,7 @@
 package auth
 
+import "github.com/google/uuid"
+
 type (
 	LoginUserRequestDTO struct {
 		Email    string `json:"email" binding:"required,email"`
@@ -31,7 +33,7 @@ type (
 	}
 
 	GetUser struct {
-		ID    string `json:"id"`
+		ID    uuid.UUID `json:"id"`
 		Name  string `json:"name"`
 		Email string `json:"email"`
 	}

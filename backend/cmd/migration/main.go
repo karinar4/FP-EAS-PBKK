@@ -4,7 +4,10 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/payment"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product_transaction"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/transaction"
 	"gorm.io/gorm"
 )
@@ -25,13 +28,28 @@ func Migration(db *gorm.DB) error {
 		return err
 	}
 
+	// Migrate ProductModel
+	if err := db.AutoMigrate(&product.ProductModel{}); err != nil {
+		return err
+	}
+
 	// Migrate TransactionModel
 	if err := db.AutoMigrate(&transaction.TransactionModel{}); err != nil {
 		return err
 	}
 
+	// Migrate ProductTransactionModel
+	if err := db.AutoMigrate(&product_transaction.ProductTransactionModel{}); err != nil {
+		return err
+	}
+
 	// Migrate PaymentModel
 	if err := db.AutoMigrate(&payment.PaymentModel{}); err != nil {
+		return err
+	}
+
+	// Migrate ImageModel
+	if err := db.AutoMigrate(&image.ImageModel{}); err != nil {
 		return err
 	}
 

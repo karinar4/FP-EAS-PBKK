@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/common"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
 )
 
 type Transaction struct {
@@ -25,6 +26,7 @@ type TransactionModel struct {
 	Status string `gorm:"type:enum('pending', 'in_progress','completed','cancelled');not null;default:'pending'"`
 	UserID uuid.UUID `gorm:"type:char(36)"`
 	User auth.UserModel `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Products []product.ProductModel `gorm:"many2many:product_transactions;foreignKey:ID;joinForeignKey:TransactionID;References:ID;joinReferences:ProductID"`
 }
 
 func (TransactionModel) TableName() string {

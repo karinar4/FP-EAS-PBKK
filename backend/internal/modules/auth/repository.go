@@ -25,7 +25,7 @@ func NewAuthRepository(db *gorm.DB) *authRepository {
 func (r *authRepository) RegisterUser(data *RegisterUserDomain) e.ApiError {
 	user := &UserModel{
 		BaseModels: common.BaseModels{
-			ID: data.Id,
+			ID: data.ID,
 		},
 		Name:     data.Name,
 		Email:    data.Email,
