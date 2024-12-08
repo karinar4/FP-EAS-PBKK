@@ -84,7 +84,7 @@ func (uc *authUseCase) LoginUser(data *LoginUserRequestDTO) (*LoginUserResponseD
 
 	return &LoginUserResponseDTO{
 		Email: user.Email,
-		Role: user.Role,
+		Role:  user.Role,
 		Token: token,
 	}, nil
 }
@@ -95,9 +95,10 @@ func (uc *authUseCase) GetMe(userID uuid.UUID) (*GetMeResponseDTO, e.ApiError) {
 		return &GetMeResponseDTO{}, e.NewApiError(404, "User not found")
 	}
 	return &GetMeResponseDTO{
+		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
-		Role: user.Role,
+		Role:  user.Role,
 	}, nil
 }
 

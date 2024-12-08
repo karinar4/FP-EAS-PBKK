@@ -3,6 +3,8 @@ package migration
 import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/cart"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/cart_product"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/payment"
@@ -50,6 +52,16 @@ func Migration(db *gorm.DB) error {
 
 	// Migrate ImageModel
 	if err := db.AutoMigrate(&image.ImageModel{}); err != nil {
+		return err
+	}
+
+	// Migrate CartModel
+	if err := db.AutoMigrate(&cart.CartModel{}); err != nil {
+		return err
+	}
+
+	// Migrate CartProductModel
+	if err := db.AutoMigrate(&cart_product.CartProductModel{}); err != nil {
 		return err
 	}
 

@@ -10,6 +10,8 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/auth"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/cart"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/cart_product"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/payment"
@@ -82,6 +84,14 @@ func main() {
 	var imageRepository image.IImageRepository = image.NewImageRepository(db)
 	var imageService image.IImageUseCase = image.NewImageUseCase(imageRepository)
 	image.NewImageHandler(r, imageService, "/api/v1/image")
+
+	var cartRepository cart.ICartRepository = cart.NewCartRepository(db)
+	var cartService cart.ICartUseCase = cart.NewCartUseCase(cartRepository)
+	cart.NewCartHandler(r, cartService, "/api/v1/cart")
+
+	var cartProductRepository cart_product.ICartProductRepository = cart_product.NewCartProductRepository(db)
+	var cartProductService cart_product.ICartProductUseCase = cart_product.NewCartProductUseCase(cartProductRepository)
+	cart_product.NewCartProductHandler(r, cartProductService, "/api/v1/cart_product")
 
 	if err := r.Run(":" + configs.Config.APP_PORT); err != nil {
 		panic(err)

@@ -10,7 +10,7 @@ type (
 
 	LoginUserResponseDTO struct {
 		Email string `json:"email"`
-		Role string `json:"role"`
+		Role  string `json:"role"`
 		Token string `json:"token"`
 	}
 
@@ -27,15 +27,16 @@ type (
 	}
 
 	GetMeResponseDTO struct {
-		Name  string `json:"name"`
-		Email string `json:"email"`
-		Role string `json:"role"`
+		ID    uuid.UUID `json:"id"`
+		Name  string    `json:"name"`
+		Email string    `json:"email"`
+		Role  string    `json:"role"`
 	}
 
 	GetUser struct {
 		ID    uuid.UUID `json:"id"`
-		Name  string `json:"name"`
-		Email string `json:"email"`
+		Name  string    `json:"name"`
+		Email string    `json:"email"`
 	}
 
 	GetAllUsersResponseDTO struct {
