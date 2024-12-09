@@ -1,11 +1,19 @@
 import LoginForm from '../../components/LoginForm';
+import { Navbar, NavbarBrand } from '@nextui-org/react';
 
 export default function LoginPage() {
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <LoginForm />
+    <div className="min-h-screen flex flex-col">
+      <Navbar position="static">
+        <NavbarBrand>
+          <p className="font-bold text-2xl">ACME</p>
+        </NavbarBrand>
+      </Navbar>
+
+      <div className="flex-grow flex items-center justify-center px-4 py-6">
+        <div className="w-full max-w-[400px]">
+          <LoginForm />
+        </div>
       </div>
     </div>
   );

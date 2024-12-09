@@ -27,17 +27,12 @@ export default function CustomNavbar({ customButtons }: CustomNavbarProps) {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link aria-current="page" href="#">
-            Customers
+            About
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Contact
           </Link>
         </NavbarItem>
       </NavbarContent>

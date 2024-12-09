@@ -32,15 +32,15 @@ export default function RegisterForm() {
         }),
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
         console.log(`Registration successful: ${JSON.stringify(result)}`);
 
         router.push('/login');
       } else {
-        const error = await response.json();
-        setError(`Error: ${error.message}`);
-        console.error(`Error: ${error.message}`);
+        setError(`Error: ${result.message}`);
+        console.error(`Error: ${result.message}`);
       }
     } catch (error: any) {
       setError(`Error: ${error.message}`);
