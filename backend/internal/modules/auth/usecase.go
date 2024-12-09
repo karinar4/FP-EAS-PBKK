@@ -77,11 +77,12 @@ func (uc *authUseCase) LoginUser(data *LoginUserRequestDTO) (*LoginUserResponseD
 	}
 
 	token, errToken := uc.GenerateToken(payloadToken)
+	fmt.Println(token)
 	if errToken != nil {
 		log.Println(errToken.Error())
 		return nil, e.NewApiError(500, fmt.Sprintf("Internal Server Error (%d)", e.ERROR_GENERATE_TOKEN_FAILED))
 	}
-
+	
 	return &LoginUserResponseDTO{
 		Email: user.Email,
 		Role:  user.Role,
