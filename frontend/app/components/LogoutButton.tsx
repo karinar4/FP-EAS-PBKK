@@ -12,7 +12,7 @@ const LogoutButton = () => {
     e.stopPropagation(); 
     document.cookie = 'auth-token=; path=/; max-age=0';
 
-    router.push('/login');
+    router.push('/');
   };
 
   return handleLogout;

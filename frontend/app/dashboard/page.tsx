@@ -1,10 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import LogoutButton from '../components/LogoutButton';
-import NavigationBar from '../components/NavigationBar'
-import {NavbarContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Link} from "@nextui-org/react";
-import Image from 'next/image';
+import NavigationBar from '@/app/components/NavigationBar'
 
 export default function Dashboard() {
   const [user, setUser] = useState<{ data: { email: string; name: string } } | null>(null);
@@ -47,51 +44,9 @@ export default function Dashboard() {
     fetchUserData();
   }, []);
 
-  const handleLogout = LogoutButton();
-
   return (
     <div>
-      <NavigationBar
-        customButtons={
-          <>
-            <NavbarContent as="div" justify="end">
-              <Link href="#">
-                <Image
-                  src="/shopping-cart.png"
-                  alt="Cart"
-                  width={35}
-                  height={35}
-                  className="mx-3"
-                />
-              </Link>
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <Avatar
-                    showFallback 
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    color="secondary"
-                    name={user?.data.name}
-                    size="sm"
-                    src="https://images.unsplash.com/broken"
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">{ user?.data.email }</p>
-                  </DropdownItem>
-                  <DropdownItem key="transactions">Transactions</DropdownItem>
-                  <DropdownItem key="logout" color="danger" onClick={handleLogout}>
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarContent>
-          </>
-        }
-      />
+      <NavigationBar />
 
     
       <h1>Welcome to the Dashboard</h1>

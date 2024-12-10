@@ -41,7 +41,7 @@ export default function ContactPage() {
 
                         <div className="mt-8 space-y-4 text-sm text-gray-600">
                             <p>
-                                We can cancel or remove items from orders until they’re packed. Please
+                                We can cancel or remove items from orders until they're packed. Please
                                 contact us as soon as possible!
                             </p>
                             <p>

@@ -3,16 +3,33 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Form, Input, Button, Card, CardHeader, CardBody, Link, Alert } from '@nextui-org/react';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+
+interface CustomJwtPayload extends JwtPayload {
+  role: string; // Menambahkan properti role pada tipe payload
+}
 
 export default function LoginForm() {
   const [error, setError] = useState<string>('');
   const router = useRouter();
 
-  useEffect(() => {
+  const checkToken = () => {
     const token = document.cookie.split(';').find(c => c.trim().startsWith('auth-token='));
-    if (token) {
-      router.push('/dashboard'); 
+      
+    if (token){
+      const decodedToken = jwtDecode<CustomJwtPayload>(token.split('=')[1]);
+      const role = decodedToken.role; // Mendapatkan role dari token
+      // Redirect berdasarkan role
+      if (role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     }
+  }
+
+  useEffect(() => {
+    checkToken();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +54,7 @@ export default function LoginForm() {
       if (response.ok) {
         document.cookie = `auth-token=${result.data.token}; path=/;`;
 
-        router.push('/dashboard');
+        checkToken();
       } else {
         setError(`Error: ${result.message}`);
         console.error(`Error: ${result.message}`);
