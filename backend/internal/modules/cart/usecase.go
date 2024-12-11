@@ -8,7 +8,7 @@ import (
 
 type ICartUseCase interface {
 	CreateCart(*CreateCartRequest) (*CartResponse, e.ApiError)
-	GetCartByUser(uuid.UUID) ([]CartResponse, e.ApiError)
+	GetCartByUser(uuid.UUID) (*CartResponse, e.ApiError)
 	UpdateCart(uuid.UUID, *UpdateCartRequest) (*CartResponse, e.ApiError)
 	DeleteCart(uuid.UUID) e.ApiError
 }
@@ -38,18 +38,13 @@ func (uc *cartUseCase) CreateCart(req *CreateCartRequest) (*CartResponse, e.ApiE
 	return toCartResponse(createdCart), nil
 }
 
-func (uc *cartUseCase) GetCartByUser(userID uuid.UUID) ([]CartResponse, e.ApiError) {
-	carts, err := uc.repo.GetCartByUserID(userID)
+func (uc *cartUseCase) GetCartByUser(userID uuid.UUID) (*CartResponse, e.ApiError) {
+	cart, err := uc.repo.GetCartByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	var responses []CartResponse
-	for _, cart := range carts {
-		responses = append(responses, *toCartResponse(&cart))
-	}
-
-	return responses, nil
+	return toCartResponse(cart), nil
 }
 
 func (uc *cartUseCase) UpdateCart(id uuid.UUID, req *UpdateCartRequest) (*CartResponse, e.ApiError) {
@@ -58,12 +53,10 @@ func (uc *cartUseCase) UpdateCart(id uuid.UUID, req *UpdateCartRequest) (*CartRe
 		return nil, err
 	}
 
-	// Update fields
-	cartToUpdate := &cart[0] // Assumes updating the first cart item found for the user
-	cartToUpdate.TotalQuantity = req.TotalQuantity
-	cartToUpdate.TotalPrice = req.TotalPrice
+	cart.TotalQuantity = req.TotalQuantity
+	cart.TotalPrice = req.TotalPrice
 
-	updatedCart, updateErr := uc.repo.UpdateCart(cartToUpdate)
+	updatedCart, updateErr := uc.repo.UpdateCart(cart)
 	if updateErr != nil {
 		return nil, updateErr
 	}

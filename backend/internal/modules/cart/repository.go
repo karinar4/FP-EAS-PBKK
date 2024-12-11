@@ -8,7 +8,7 @@ import (
 
 type ICartRepository interface {
 	CreateCart(*CartModel) (*CartModel, e.ApiError)
-	GetCartByUserID(uuid.UUID) ([]CartModel, e.ApiError)
+	GetCartByUserID(uuid.UUID) (*CartModel, e.ApiError)
 	UpdateCart(*CartModel) (*CartModel, e.ApiError)
 	DeleteCart(uuid.UUID) e.ApiError
 }
@@ -28,12 +28,12 @@ func (r *cartRepository) CreateCart(data *CartModel) (*CartModel, e.ApiError) {
 	return data, nil
 }
 
-func (r *cartRepository) GetCartByUserID(userID uuid.UUID) ([]CartModel, e.ApiError) {
-	var carts []CartModel
-	if err := r.db.Preload("Product").Where("user_id = ?", userID).Find(&carts).Error; err != nil {
+func (r *cartRepository) GetCartByUserID(userID uuid.UUID) (*CartModel, e.ApiError) {
+	cart := &CartModel{}
+	if err := r.db.Where("user_id = ?", userID).First(&cart).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
 	}
-	return carts, nil
+	return cart, nil
 }
 
 func (r *cartRepository) UpdateCart(data *CartModel) (*CartModel, e.ApiError) {

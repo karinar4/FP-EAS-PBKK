@@ -28,7 +28,7 @@ func (h *CartHandler) Routes(prefix string) {
 	cart.Use(middleware.AuthenticateJWT())
 	{
 		cart.POST("/", h.CreateCart)
-		cart.GET("/", h.GetCartByUser)
+		cart.GET("/:user_id", h.GetCartByUser)
 		cart.PUT("/:id", h.UpdateCart)
 		cart.DELETE("/:id", h.DeleteCart)
 	}

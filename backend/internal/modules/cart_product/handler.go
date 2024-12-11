@@ -29,6 +29,8 @@ func (h *CartProductHandler) Routes(prefix string) {
 	{
 		cart_product.POST("/", h.CreateCartProduct)
 		cart_product.GET("/", h.GetAllCartProducts)
+		cart_product.GET("/:cart_id", h.GetCartProductsByID)
+		cart_product.PUT("/:cart_id/:product_id", h.UpdateCartProduct)
 		cart_product.DELETE("/:cart_id/:product_id", h.DeleteCartProduct)
 	}
 }
@@ -58,6 +60,51 @@ func (h *CartProductHandler) GetAllCartProducts(c *gin.Context) {
 
 	c.JSON(http.StatusOK, app.NewSuccessResponse("Cart-product list retrieved successfully", res))
 }
+
+func (h *CartProductHandler) GetCartProductsByID(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("cart_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, app.NewErrorResponse("Invalid ID format", nil))
+		return
+	}
+
+	res, err := h.cartProductUseCase.GetCartProductsByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, app.NewErrorResponse("Product not found", nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, app.NewSuccessResponse("Product retrieved successfully", res))
+}
+
+func (h *CartProductHandler) UpdateCartProduct(c *gin.Context) {
+	cartID, err := uuid.Parse(c.Param("cart_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, app.NewErrorResponse("Invalid cart ID format", nil))
+		return
+	}
+
+	productID, err := uuid.Parse(c.Param("product_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, app.NewErrorResponse("Invalid product ID format", nil))
+		return
+	}
+
+	var req UpdateCartProductRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, app.NewErrorResponse("Invalid request payload", nil))
+		return
+	}
+
+	res, err := h.cartProductUseCase.UpdateCartProduct(cartID, productID, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, app.NewErrorResponse("Failed to update cart-product", nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, app.NewSuccessResponse("Cart-product updated successfully", res))
+}
+
 
 func (h *CartProductHandler) DeleteCartProduct(c *gin.Context) {
 	cartID, err := uuid.Parse(c.Param("cart_id"))
