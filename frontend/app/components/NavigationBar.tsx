@@ -127,7 +127,7 @@ export default function NavigationBar() {
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             {user ? (
               <>
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem key="profile" className="h-14 gap-2" onClick={() => (window.location.href = '/profile')}>
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">{ user?.data.email }</p>
                 </DropdownItem>

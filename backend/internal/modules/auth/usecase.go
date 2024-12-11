@@ -22,6 +22,7 @@ type IAuthUseCase interface {
 	GenerateToken(PayloadToken) (string, error)
 	GetAllUser() (*GetAllUsersResponseDTO, e.ApiError)
 	GetUserByEmail(string) (*GetUser, e.ApiError)
+	UpdateUser(uuid.UUID, *UpdateUserRequest) (*UpdateUserResponse, e.ApiError)
 }
 
 type authUseCase struct {
@@ -100,6 +101,18 @@ func (uc *authUseCase) GetMe(userID uuid.UUID) (*GetMeResponseDTO, e.ApiError) {
 		Name:  user.Name,
 		Email: user.Email,
 		Role:  user.Role,
+		Telephone: func() string {
+            if user.Telephone == nil {
+                return ""
+            }
+            return *user.Telephone
+        }(),
+		Address: func() string {
+            if user.Address == nil {
+                return ""
+            }
+            return *user.Address
+        }(),
 	}, nil
 }
 
@@ -164,5 +177,30 @@ func (uc *authUseCase) GetUserByEmail(email string) (*GetUser, e.ApiError) {
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
+	}, nil
+}
+
+func (uc *authUseCase) UpdateUser(id uuid.UUID, req *UpdateUserRequest) (*UpdateUserResponse, e.ApiError) {
+	user, err := uc.authRepository.GetUserByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Name = req.Name
+	user.Email = req.Email
+	user.Telephone = &req.Telephone
+	user.Address = &req.Address
+
+	updatedUser, updateErr := uc.authRepository.UpdateUser(user)
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return &UpdateUserResponse{
+		ID:   updatedUser.ID,
+		Name: updatedUser.Name,
+		Email: updatedUser.Email,
+		Telephone: *updatedUser.Telephone,
+		Address: *updatedUser.Address,
 	}, nil
 }

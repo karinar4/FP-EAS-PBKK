@@ -31,6 +31,23 @@ type (
 		Name  string    `json:"name"`
 		Email string    `json:"email"`
 		Role  string    `json:"role"`
+		Telephone string `json:"telephone"`
+		Address string `json:"address"`
+	}
+
+	UpdateUserRequest struct {
+		Name  string    `json:"name"`
+		Email string    `json:"email"`
+		Telephone string `json:"telephone"`
+		Address string `json:"address"`
+	}
+
+	UpdateUserResponse struct {
+		ID    uuid.UUID `json:"id"`
+		Name  string    `json:"name"`
+		Email string    `json:"email"`
+		Telephone string `json:"telephone"`
+		Address string `json:"address"`
 	}
 
 	GetUser struct {

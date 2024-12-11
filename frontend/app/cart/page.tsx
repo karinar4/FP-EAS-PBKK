@@ -60,7 +60,7 @@ export const DeleteIcon = (props: any) => {
 
 export default function Cart() {
   const [user, setUser] = useState<{ data: { id: string; email: string; name: string } } | null>(null);
-  const [cartCreated, setCartCreated] = useState(false);
+  // const [cartCreated, setCartCreated] = useState(false);
   const [cart, setCart] = useState<{ data: { id: string; total_price: number; total_quantity: number, user_id: string } } | null>(null);
   const [cartProducts, setCartProducts] = useState<any[]>([]);
   const [value, setValue] = React.useState(null);
@@ -113,7 +113,7 @@ export default function Cart() {
           const cartData = await cartResponse.json();
           if (cartData.data) {
             console.log('Cart exists:', cartData);
-            setCartCreated(true);
+            // setCartCreated(true);
             setCart(cartData);
             console.log(cartData);
             await fetchCartProducts(cartData.data.id, token);
@@ -144,7 +144,7 @@ export default function Cart() {
           const data = await response.json();
           console.log('Cart created:', data);
           setCart(data);
-          setCartCreated(true);
+          // setCartCreated(true);
         } else {
           console.log('Error creating cart:', response);
         }
@@ -194,7 +194,9 @@ export default function Cart() {
 
       if (response.ok) {
         console.log('Product updated:', updatedData);
-        fetchCart(cartId, token);
+        if (user){
+          fetchCart(user.data.id, token);
+        }
       } else {
         console.log('Error updating cart product:', response);
       }
@@ -203,9 +205,9 @@ export default function Cart() {
     }
   };
 
-  const fetchCart = async (cartId: string, token: string) => {
+  const fetchCart = async (userId: string, token: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/cart/` + cartId, {
+      const response = await fetch(`http://localhost:3000/api/v1/cart/` + userId, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -332,7 +334,7 @@ export default function Cart() {
       <NavigationBar />
       <main className="flex flex-col items-center p-8 bg-gray-50 min-h-screen">
         {cartProducts.length > 0 ? (
-        <><h1 className="text-3xl font-bold mb-8 text-gray-800">Cart</h1><Table aria-label="Example static collection table"
+        <><h1 className="text-3xl font-bold mb-8 text-gray-800">Cart</h1><Table aria-label="Cart table"
             classNames={{
               th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
               tbody: ["border-b"]
@@ -342,7 +344,7 @@ export default function Cart() {
                 <p className='font-medium text-lg'>Total Quantity: {cart?.data.total_quantity}</p>
                 <p className='font-medium text-lg'>Total Price: ${cart?.data.total_price}</p>
               </div>
-              <Button radius='sm' className="bg-yellow-500 hover:bg-yellow-600 text-white text-md font-bold">Go To Checkout</Button>
+              <Button radius='sm' className="bg-yellow-500 hover:bg-yellow-600 text-white text-md font-bold" onClick={() => router.push('/checkout')}>Checkout</Button>
             </div>}>
             <TableHeader>
               <TableColumn>NAME</TableColumn>

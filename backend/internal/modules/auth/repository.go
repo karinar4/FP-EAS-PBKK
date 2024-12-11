@@ -12,6 +12,7 @@ type IAuthRepository interface {
 	GetUserByEmail(string) (*UserModel, e.ApiError)
 	GetUserByID(uuid.UUID) (*UserModel, e.ApiError)
 	GetAllUser() ([]UserModel, e.ApiError)
+	UpdateUser(*UserModel) (*UserModel, e.ApiError)
 }
 
 type authRepository struct {
@@ -74,4 +75,11 @@ func (r *authRepository) GetAllUser() ([]UserModel, e.ApiError) {
 	}
 
 	return users, nil
+}
+
+func (r *authRepository) UpdateUser(data *UserModel) (*UserModel, e.ApiError) {
+	if err := r.db.Save(data).Error; err != nil {
+		return nil, e.NewApiError(e.ErrDatabaseUpdateFailed, err.Error())
+	}
+	return data, nil
 }

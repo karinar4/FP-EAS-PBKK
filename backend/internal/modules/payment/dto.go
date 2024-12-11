@@ -8,7 +8,6 @@ import (
 
 type CreatePaymentRequest struct {
 	AccountNumber 	string		  `json:"account_number" binding:"required"`
-	Status			string	  `json:"status" binding:"required"`
 	TransactionID 			uuid.UUID `json:"transaction_id" binding:"required"`
 }
 
