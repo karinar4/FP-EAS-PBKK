@@ -11,12 +11,12 @@ import (
 
 type CategoryHandler struct {
 	categoryUseCase ICategoryUseCase
-	app         *gin.Engine
+	app             *gin.Engine
 }
 
 func NewCategoryHandler(app *gin.Engine, categoryUseCase ICategoryUseCase, prefixApi string) {
 	handler := &CategoryHandler{
-		app:         app,
+		app:             app,
 		categoryUseCase: categoryUseCase,
 	}
 
@@ -25,11 +25,13 @@ func NewCategoryHandler(app *gin.Engine, categoryUseCase ICategoryUseCase, prefi
 
 func (h *CategoryHandler) Routes(prefix string) {
 	category := h.app.Group(prefix)
+
+	category.GET("/", h.GetAllCategory)
+	category.GET("/:id", h.GetCategoryByID)
+
 	category.Use(middleware.AuthenticateJWT())
 	{
 		category.POST("/", h.CreateCategory)
-		category.GET("/", h.GetAllCategory)
-		category.GET("/:id", h.GetCategoryByID)
 		category.PUT("/:id", h.UpdateCategory)
 		category.DELETE("/:id", h.DeleteCategory)
 	}

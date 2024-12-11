@@ -20,4 +20,5 @@ func main() {
 	product.CategorySeeds(db)
 	product.BrandSeeds(db)
 	product.ProductSeeds(db)
+	product.ImageSeeds(db)
 }

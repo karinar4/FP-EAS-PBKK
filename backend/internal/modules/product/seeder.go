@@ -7,12 +7,65 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/common"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 	"gorm.io/gorm"
 )
 
 var categories []*category.CategoryModel
 var brands []*brand.BrandModel
 var products []*ProductModel
+
+func ImageSeeds(db *gorm.DB) {
+	// Fetch all products from the database
+	var products []Product
+	err := db.Find(&products).Error
+	if err != nil {
+		fmt.Println("Error fetching products:", err)
+		return
+	}
+
+	// Check if there are products available
+	if len(products) == 0 {
+		fmt.Println("No products found. Skipping image seeding.")
+		return
+	}
+
+	// Define reusable image URL pairs
+	imagePairs := [][]string{
+		{"https://i.imgur.com/qgrKHCJ.jpeg", "https://i.imgur.com/TnwmiBp.png"},
+		{"https://i.imgur.com/Z3cZQz8.jpeg", "https://i.imgur.com/vqFopnJ.png"},
+		{"https://i.imgur.com/tDs0iXx.png", "https://i.imgur.com/hYWZdCw.jpeg"},
+		{"https://i.imgur.com/01butBo.jpeg", "https://i.imgur.com/Ijpf8AF.jpeg"},
+		{"https://i.imgur.com/Dl88mUY.jpeg", "https://i.imgur.com/u5EOZYP.png"},
+	}
+
+	// Prepare images for all products
+	var images []*image.ImageModel
+	for i, product := range products {
+		// Determine the pair of images to use by cycling through the list
+		imagePair := imagePairs[i%len(imagePairs)]
+
+		// Add two images for the current product
+		images = append(images, &image.ImageModel{
+			BaseModels: common.BaseModels{ID: uuid.New()},
+			ProductID:  product.ID,
+			URL:        imagePair[0],
+		})
+		images = append(images, &image.ImageModel{
+			BaseModels: common.BaseModels{ID: uuid.New()},
+			ProductID:  product.ID,
+			URL:        imagePair[1],
+		})
+	}
+
+	// Insert all images into the database
+	err = db.Create(images).Error
+	if err != nil {
+		fmt.Println("Error creating images:", err)
+	} else {
+		fmt.Println("Successfully seeded images for all products")
+	}
+}
 
 func CategorySeeds(db *gorm.DB) {
 	categories = []*category.CategoryModel{
@@ -502,9 +555,9 @@ func ProductSeeds(db *gorm.DB) {
 		},
 		{
 			BaseModels:  common.BaseModels{ID: uuid.New()},
-			Name:        "Boston Dynamics Atlas",
-			Description: "Humanoid robot for advanced mobility and agility.",
-			Price:       92000.00,
+			Name:        "Boston Dynamics Stretch",
+			Description: "Multi-purpose mobile industrial robot.",
+			Price:       50000.00,
 			Stock:       1,
 			CategoryID:  categories[5].ID,
 			BrandID:     brands[19].ID,
