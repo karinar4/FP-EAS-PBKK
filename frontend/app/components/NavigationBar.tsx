@@ -107,7 +107,7 @@ export default function NavigationBar() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="warning"
                 name={user?.data.name}
                 size="sm"
                 src=""
@@ -118,7 +118,7 @@ export default function NavigationBar() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="warning"
                 size="sm"
                 src=""
               />
@@ -131,7 +131,7 @@ export default function NavigationBar() {
                   <p className="font-semibold">Signed in as</p>
                   <p className="font-semibold">{ user?.data.email }</p>
                 </DropdownItem>
-                <DropdownItem key="transactions">Transactions</DropdownItem>
+                <DropdownItem key="transactions" onClick={() => router.push('/transaction')}>Transactions</DropdownItem>
                 <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                   Log Out
                 </DropdownItem>

@@ -2,14 +2,14 @@ package product_transaction
 
 import (
 	"github.com/google/uuid"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/pkg/e"
 )
 
 type IProductTransactionUseCase interface {
 	CreateProductTransaction(*CreateProductTransactionRequest) (*CreateProductTransactionResponse, e.ApiError)
 	GetAllProductTransactions() (*GetAllProductTransactionsResponse, e.ApiError)
-	// GetByTransactionID(uuid.UUID) (*GetProductTransactionResponse, e.ApiError)
-	// UpdateProductTransaction(uuid.UUID, *UpdateProductTransactionRequest) (*UpdateProductTransactionResponse, e.ApiError)
+	GetProductTransactionsByID(uuid.UUID) (*GetAllProductTransactionsResponse, e.ApiError)
 	DeleteProductTransaction(uuid.UUID, uuid.UUID) e.ApiError
 }
 
@@ -55,7 +55,12 @@ func (uc *productTransactionUseCase) GetAllProductTransactions() (*GetAllProduct
 	var response []GetProductTransactionResponse
 	for _, product_transaction := range product_transactions {
 		response = append(response, GetProductTransactionResponse{
-			ProductID:        product_transaction.ProductID,
+			Product:        product.GetProductResponse{
+				ID:   product_transaction.Product.ID,
+				Name: product_transaction.Product.Name,
+				Price: product_transaction.Product.Price,
+				Stock: product_transaction.Product.Stock,
+			},
 			TransactionID: product_transaction.TransactionID,
 			RentStartDate:       product_transaction.RentStartDate,
 			RentEndDate:       product_transaction.RentEndDate,
@@ -67,21 +72,31 @@ func (uc *productTransactionUseCase) GetAllProductTransactions() (*GetAllProduct
 	return &GetAllProductTransactionsResponse{ProductTransactions: response}, nil
 }
 
-// func (uc *productTransactionUseCase) GetByTransactionID(id uuid.UUID) (*GetProductTransactionResponse, e.ApiError) {
-// 	product_transactions, err := uc.repo.GetByTransactionID(id)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (uc *productTransactionUseCase) GetProductTransactionsByID(transaction_id uuid.UUID) (*GetAllProductTransactionsResponse, e.ApiError) {
+	product_transactions, err := uc.repo.GetProductTransactionsByID(transaction_id)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return &GetProductTransactionResponse{
-// 		ProductID:        product_transaction.ProductID,
-// 		TransactionID: product_transaction.TransactionID,
-// 			RentStartDate:       product_transaction.RentStartDate,
-// 			RentEndDate:       product_transaction.RentEndDate,
-// 			Quantity:  product_transaction.Quantity,
-// 			Price:     product_transaction.Price,
-// 	}, nil
-// }
+	var response []GetProductTransactionResponse
+	for _, product_transaction := range product_transactions {
+		response = append(response, GetProductTransactionResponse{
+			Product:        product.GetProductResponse{
+				ID:   product_transaction.Product.ID,
+				Name: product_transaction.Product.Name,
+				Price: product_transaction.Product.Price,
+				Stock: product_transaction.Product.Stock,
+			},
+			TransactionID: product_transaction.TransactionID,
+			RentStartDate:       product_transaction.RentStartDate,
+			RentEndDate:       product_transaction.RentEndDate,
+			Quantity:  product_transaction.Quantity,
+			Price:     product_transaction.Price,
+		})
+	}
+
+	return &GetAllProductTransactionsResponse{ProductTransactions: response}, nil
+}
 
 func (uc *productTransactionUseCase) DeleteProductTransaction(product_id uuid.UUID, transaction_id uuid.UUID) e.ApiError {
 	return uc.repo.DeleteProductTransaction(product_id, transaction_id)

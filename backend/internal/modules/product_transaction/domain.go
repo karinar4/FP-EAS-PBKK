@@ -4,7 +4,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	// "github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
+	// "github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/transaction"
 )
 
 type ProductTransaction struct {
@@ -26,8 +27,8 @@ type ProductTransactionModel struct {
 	Quantity int	`gorm:"not null"`
 	Price float64	`gorm:"type:decimal(10,2);not null"`
 
-	// Product   product.ProductModel   `gorm:"foreignKey:ProductID"`
-	// Transaction transaction.TransactionModel `gorm:"foreignKey:TransactionID"`
+	Product       product.ProductModel `gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	// Transaction transaction.TransactionModel `gorm:"foreignKey:TransactionID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 func (ProductTransactionModel) TableName() string {

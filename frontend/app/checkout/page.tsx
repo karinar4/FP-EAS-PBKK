@@ -292,7 +292,7 @@ export default function Checkout() {
                                 <Divider className="my-4" />
                                 {cartProducts.map((cartProduct) => (
                                     <div className='flex flex-row w-full justify-between mb-4' key={cartProduct.product.id}>
-                                        <p>{cartProduct.product.name}</p>
+                                        <p>{cartProduct.quantity} x {cartProduct.product.name}</p>
                                         <p>{cartProduct.price}</p>
                                     </div>
                                 ))}

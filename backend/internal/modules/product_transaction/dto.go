@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/product"
 )
 
 type CreateProductTransactionRequest struct {
@@ -25,7 +26,8 @@ type CreateProductTransactionResponse struct {
 }
 
 type GetProductTransactionResponse struct {
-	ProductID		uuid.UUID	`json:"product_id"`
+	// ProductID		uuid.UUID	`json:"product_id"`
+	Product 		product.GetProductResponse `json:"product"`
 	TransactionID   uuid.UUID	`json:"transaction_id"`
 	RentStartDate 	time.Time	`json:"rent_start_date"`
 	RentEndDate     time.Time   `json:"rent_end_date"`

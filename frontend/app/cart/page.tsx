@@ -334,7 +334,8 @@ export default function Cart() {
       <NavigationBar />
       <main className="flex flex-col items-center p-8 bg-gray-50 min-h-screen">
         {cartProducts.length > 0 ? (
-        <><h1 className="text-3xl font-bold mb-8 text-gray-800">Cart</h1><Table aria-label="Cart table"
+        <><h1 className="text-3xl font-bold mb-8 text-gray-800">Cart</h1>
+        <Table aria-label="Cart table"
             classNames={{
               th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
               tbody: ["border-b"]
