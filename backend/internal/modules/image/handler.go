@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/middleware"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/pkg/app"
 )
 
@@ -16,11 +17,14 @@ func NewImageHandler(router *gin.Engine, useCase IImageUseCase, prefix string) {
 	handler := &ImageHandler{imageUseCase: useCase}
 
 	imageGroup := router.Group(prefix)
+
+	imageGroup.GET("/:id", handler.GetImageByID)
+	imageGroup.GET("/product/:product_id", handler.GetImagesByProductID)
+
+	imageGroup.Use(middleware.AuthenticateJWT())
 	{
 		imageGroup.POST("/", handler.CreateImage)
-		imageGroup.GET("/", handler.GetAllImages)    // Get all images
-		imageGroup.GET("/:id", handler.GetImageByID) // Get image by ID
-		imageGroup.GET("/product/:product_id", handler.GetImagesByProductID)
+		imageGroup.GET("/", handler.GetAllImages)
 		imageGroup.DELETE("/:id", handler.DeleteImage)
 	}
 }

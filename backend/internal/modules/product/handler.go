@@ -25,11 +25,13 @@ func NewProductHandler(app *gin.Engine, productUseCase IProductUseCase, prefixAp
 
 func (h *ProductHandler) Routes(prefix string) {
 	product := h.app.Group(prefix)
+
+	product.GET("/", h.GetAllProducts)
+	product.GET("/:id", h.GetProductByID)
+
 	product.Use(middleware.AuthenticateJWT())
 	{
 		product.POST("/", h.CreateProduct)
-		product.GET("/", h.GetAllProducts)
-		product.GET("/:id", h.GetProductByID)
 		product.PUT("/:id", h.UpdateProduct)
 		product.DELETE("/:id", h.DeleteProduct)
 	}

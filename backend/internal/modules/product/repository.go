@@ -33,7 +33,7 @@ func (r *productRepository) CreateProduct(data *ProductModel) (*ProductModel, e.
 
 func (r *productRepository) GetAllProducts() ([]ProductModel, e.ApiError) {
 	var products []ProductModel
-	if err := r.db.Preload("Category").Preload("Brand").Find(&products).Error; err != nil {
+	if err := r.db.Preload("Category").Preload("Brand").Preload("Images").Find(&products).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
 	}
 	return products, nil
@@ -41,7 +41,7 @@ func (r *productRepository) GetAllProducts() ([]ProductModel, e.ApiError) {
 
 func (r *productRepository) GetProductByID(id uuid.UUID) (*ProductModel, e.ApiError) {
 	var product ProductModel
-	if err := r.db.Preload("Category").Preload("Brand").First(&product, "id = ?", id).Error; err != nil {
+	if err := r.db.Preload("Category").Preload("Brand").Preload("Images").First(&product, "id = ?", id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, e.NewApiError(e.ErrNotFound, "Product not found")
 		}
@@ -55,7 +55,7 @@ func (r *productRepository) UpdateProduct(id uuid.UUID, updatedFields map[string
 		return nil, e.NewApiError(e.ErrDatabaseUpdateFailed, err.Error())
 	}
 	var updatedProduct ProductModel
-	if err := r.db.Preload("Category").Preload("Brand").First(&updatedProduct, "id = ?", id).Error; err != nil {
+	if err := r.db.Preload("Category").Preload("Brand").Preload("Images").First(&updatedProduct, "id = ?", id).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
 	}
 	return &updatedProduct, nil

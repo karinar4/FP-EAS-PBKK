@@ -5,6 +5,7 @@ import (
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/brand"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/category"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/common"
+	"github.com/karinar4/FP-EAS-PBKK/backend/internal/modules/image"
 )
 
 type Product struct {
@@ -27,6 +28,7 @@ type ProductModel struct {
 	BrandID     uuid.UUID
 	Category    category.CategoryModel `gorm:"foreignKey:CategoryID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Brand       brand.BrandModel       `gorm:"foreignKey:BrandID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Images      []image.ImageModel     `gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 func (ProductModel) TableName() string {
