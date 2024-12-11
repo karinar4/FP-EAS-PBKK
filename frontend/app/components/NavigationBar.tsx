@@ -3,7 +3,7 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export const AcmeLogo = () => {
   return (
@@ -22,7 +22,6 @@ export default function NavigationBar() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ data: { email: string; name: string } } | null>(null);
   const router = useRouter();
-  const pathname = useRouter();
 
   useEffect(() => {
     const getTokenFromCookies = () => {
@@ -35,22 +34,25 @@ export default function NavigationBar() {
       try {
         const token = getTokenFromCookies();
 
-        if (token) {
-          console.log(token);
+        if (!token) {
+          console.log('No authentication token found in cookies.');
+        }
+        
+        const response = await fetch('http://localhost:3000/api/v1/auth/me', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
 
-          const response = await fetch('http://localhost:3000/api/v1/auth/me', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-          if (!response.ok) {
-            console.log('Failed to fetch user data');
-            // setIsLoggedIn(false);
-          }
+        if (!response.ok) {
+          console.log('Failed to fetch user data');
+          setUser(null);
+          // setIsLoggedIn(false);
+        } else {
           const data = await response.json();
-          // setIsLoggedIn(true);
+            // setIsLoggedIn(true);
           setUser(data);
         }
       } catch (error) {
@@ -68,7 +70,7 @@ export default function NavigationBar() {
     setUser(null);
     router.push("/");
   };
-
+  
   return (
     <Navbar position="static" maxWidth="full">
       <NavbarBrand className="w-1/3">
@@ -88,7 +90,7 @@ export default function NavigationBar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
-        <Link href="#">
+        <Link href="/cart">
           <Image
             src="/shopping-cart.png"
             alt="Cart"
@@ -99,7 +101,7 @@ export default function NavigationBar() {
         </Link>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
-            {String(pathname) === "/" ? (
+            {user ? (
               <Avatar
                 showFallback 
                 isBordered
@@ -123,7 +125,7 @@ export default function NavigationBar() {
             )}
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            {String(pathname) === "/" ? (
+            {user ? (
               <>
                 <DropdownItem key="profile" className="h-14 gap-2">
                   <p className="font-semibold">Signed in as</p>
