@@ -19,7 +19,7 @@ export default function Sidebar() {
             <h2 className="text-xl font-semibold text-black">Admin Dashboard</h2>
           </div>
           <div className="mt-2 w-full text-center">
-            <a href="#"
+            <a href="/admin/product"
               className="block py-1 px-4 text-lg text-black hover:bg-gray-100 rounded-md transition-colors duration-200">
               Product
             </a>
