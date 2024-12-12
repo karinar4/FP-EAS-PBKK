@@ -253,8 +253,9 @@ export default function ProductPage(): JSX.Element {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       <NavigationBar />
+    <div className="min-h-screen bg-gray-50">
       {alert.show && (
         <Alert
           color="success"
@@ -358,5 +359,6 @@ export default function ProductPage(): JSX.Element {
         </section>
       </main>
     </div>
+    </>
   );
 }

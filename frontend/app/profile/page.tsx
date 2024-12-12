@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import NavigationBar from '@/app/components/NavigationBar'
 import Image from 'next/image';
-import { Input, Form, Button, Card, CardBody } from "@nextui-org/react";
+import { Input, Form, Button, Card, CardBody, Alert } from "@nextui-org/react";
 
 
 export default function Profile() {
@@ -14,6 +14,9 @@ export default function Profile() {
         telephone: '',
         address: '',
     });
+    const [alert, setAlert] = useState({ show: false, message: '' });
+    const [isVisible, setIsVisible] = useState(true);
+
 
     const getTokenFromCookies = () => {
         const cookies = document.cookie.split('; ');
@@ -85,11 +88,16 @@ export default function Profile() {
 
       if (!response.ok) {
         console.log('Failed to update user data');
+      } else {
+        const updatedData = await response.json();
+        setUser(updatedData.data);
+        console.log('Profile updated successfully!');
+        setAlert({
+          show: true,
+          message: "Profile updated successfully!",
+        });
       }
 
-      const updatedData = await response.json();
-      setUser(updatedData.data);
-      console.log('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating user data:', error);
       console.log('Failed to update profile.');
@@ -99,6 +107,17 @@ export default function Profile() {
   return (
     <div>
       <NavigationBar />
+      {alert.show && (
+        <Alert
+          color="success"
+          title="Profile updated successfully"
+          variant="faded"
+          isVisible={isVisible}
+          onClose={() => setIsVisible(false)}
+        >
+          {alert.message}
+        </Alert>
+      )}
       <main className='flex flex-col p-6 bg-gray-50 h-screen items-center'>
           <h1 className='font-bold text-gray-800 text-2xl'>Personal Info</h1>
           <p className='text-gray-600 py-2'>You can update your profile photo and personal details here.</p>

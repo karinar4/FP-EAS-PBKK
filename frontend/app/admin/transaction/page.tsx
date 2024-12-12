@@ -110,7 +110,9 @@ export default function TransactionAdmin() {
   }, []);
 
   const handleLogout = () => {
-    LogoutButton();
+    document.cookie = 'auth-token=; Max-Age=0';
+    setUser(null);
+    router.push("/");
   };
 
   return (
@@ -151,7 +153,7 @@ export default function TransactionAdmin() {
               <h1 className="text-3xl font-bold text-black">Transactions</h1>
             </div>
 
-            {transactions.length > 0 ? (
+            {transactions && transactions.length > 0 ? (
               <Table className="mx-8 max-w-5xl">
                 <TableHeader>
                   <TableColumn>ID</TableColumn>

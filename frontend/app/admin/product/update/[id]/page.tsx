@@ -173,8 +173,8 @@ export default function UpdateProductForm() {
         },
         body: JSON.stringify({
           ...formData,
-          category_id: formData.category_id,
-          brand_id: formData.brand_id,
+          category_id: formData.category_id.currentKey,
+          brand_id: formData.brand_id.currentKey,
         }),
       });
 
@@ -187,15 +187,6 @@ export default function UpdateProductForm() {
           message: "Product updated successfully!",
         });
       }
-
-      setFormData({
-        name: "",
-        description: "",
-        price: 0,
-        stock: 0,
-        category_id: "",
-        brand_id: "",
-      });
     } catch (error) {
       console.error("Error updating product:", error);
     }

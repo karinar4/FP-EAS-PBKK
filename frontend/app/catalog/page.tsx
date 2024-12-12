@@ -53,7 +53,7 @@ export default function CatalogPage () {
 
         if (!token) {
           console.log('No authentication token found in cookies.');
-          router.push('/login');
+          // router.push('/login');
           return;
         }
 
@@ -68,7 +68,7 @@ export default function CatalogPage () {
 
         if (!userResponse.ok) {
           console.log('Failed to fetch user data');
-          router.push('/login');
+          // router.push('/login');
           return;
         }
 

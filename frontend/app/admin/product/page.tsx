@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '@/app/components/LogoutButton';
 import Sidebar from '@/app/components/Sidebar';
 import { Navbar, NavbarContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@nextui-org/react";
-import NavigationBar from '@/app/components/NavigationBar';
 import { useRouter } from 'next/navigation';
 
 export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
@@ -96,8 +95,37 @@ export default function ProductAdmin() {
   }, []);
 
   const handleLogout = () => {
-    // Implement logout logic, such as clearing cookies or redirecting
-    LogoutButton();
+    document.cookie = 'auth-token=; Max-Age=0';
+    setUser(null);
+    router.push("/");
+  };
+
+  const handleDelete = async (productId: number) => {
+    try {
+      const token = document.cookie.split('; ').find(cookie => cookie.startsWith('auth-token='))?.split('=')[1];
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`http://localhost:3000/api/v1/product/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        // Remove the deleted product from the state
+        setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+        alert('Product deleted successfully!');
+      } else {
+        throw new Error('Failed to delete product');
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product');
+    }
   };
 
   return (
@@ -111,7 +139,7 @@ export default function ProductAdmin() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="warning"
                 name={user ? user.data.name : "Guest"}
                 size="sm"
                 src="https://images.unsplash.com/broken"
@@ -122,7 +150,7 @@ export default function ProductAdmin() {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">{user?.data.email}</p>
             </DropdownItem>
-            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+            <DropdownItem key="logout" color="danger" onClick={() => handleLogout}>
               Log Out
             </DropdownItem>
           </DropdownMenu>
@@ -134,21 +162,18 @@ export default function ProductAdmin() {
         <main className="container flex gap-8">
           <Sidebar />
           <div className="flex-1">
-            <div className="bg-white w-full shadow-sm">
-              
-            </div>
-
           <div className='flex-1 w-full'>
             <div className="p-8 flex justify-between">
               <h1 className="text-3xl font-bold text-black">Product</h1>
               <Button className="bg-yellow-500 font-medium" onClick={() => router.push('/admin/product/create')}>Create New</Button>
             </div>
 
-            {products.length > 0 ? (
+            {products && products.length > 0 ? (
               <Table className="mx-8 max-w-5xl">
                 <TableHeader>
                   <TableColumn>Id</TableColumn>
                   <TableColumn>Name</TableColumn>
+                  <TableColumn>Description</TableColumn>
                   <TableColumn>Price</TableColumn>
                   <TableColumn>Stock</TableColumn>
                   <TableColumn>Category</TableColumn>
@@ -160,6 +185,7 @@ export default function ProductAdmin() {
                     <TableRow key={product.id}>
                       <TableCell className="py-4">{product.id}</TableCell>
                       <TableCell className="py-4">{product.name}</TableCell>
+                      <TableCell className="py-4">{product.description}</TableCell>
                       <TableCell className="py-4">{product.price}</TableCell>
                       <TableCell className="py-4">{product.stock}</TableCell>
                       <TableCell className="py-4">{product.category.name}</TableCell>
@@ -173,8 +199,8 @@ export default function ProductAdmin() {
                               </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                              <DropdownItem key="edit">Edit</DropdownItem>
-                              <DropdownItem key="delete">Delete</DropdownItem>
+                              <DropdownItem key="edit" onClick={() => router.push(`/admin/product/update/${product.id}`)}>Edit</DropdownItem>
+                              <DropdownItem key="delete" onClick={() => handleDelete(product.id)}>Delete</DropdownItem>
                             </DropdownMenu>
                           </Dropdown>
                         </div>

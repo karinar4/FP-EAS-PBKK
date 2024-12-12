@@ -4,10 +4,12 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '@/app/components/LogoutButton';
 import Sidebar from '@/app/components/Sidebar';
 import { Navbar, NavbarContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
     const [user, setUser] = useState<{ data: { email: string; name: string } } | null>(null);
-
+    const router = useRouter();
+    
     useEffect(() => {
       const getTokenFromCookies = () => {
         const cookies = document.cookie.split('; ');
@@ -46,7 +48,11 @@ export default function Home() {
       fetchUserData();
     }, []);
   
-    const handleLogout = LogoutButton();
+    const handleLogout = () => {
+      document.cookie = 'auth-token=; Max-Age=0';
+      setUser(null);
+      router.push("/");
+    };
   
   return (
     <div className="flex bg-gray-50 h-screen w-full">

@@ -22,7 +22,7 @@ export default function ContactPage() {
                             <CardBody className="items-center justify-center">
                                 <h2 className="text-3xl font-semibold text-gray-800">Our Mission</h2>
                             <p className="mt-4 text-lg text-gray-600">
-                                At RoboDrones, our mission is to provide cutting-edge robotics and drone technologies to enhance business operations, support education, and enable exciting personal experiences. We are committed to providing top-tier rental services with a focus on customer satisfaction, reliability, and innovation.
+                                At RoboRent, our mission is to provide cutting-edge robotics and drone technologies to enhance business operations, support education, and enable exciting personal experiences. We are committed to providing top-tier rental services with a focus on customer satisfaction, reliability, and innovation.
                             </p>
                             </CardBody>
                         </Card>
