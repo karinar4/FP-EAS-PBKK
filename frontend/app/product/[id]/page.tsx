@@ -3,6 +3,7 @@
 import NavigationBar from "@/app/components/NavigationBar";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { Alert } from "@nextui-org/react";
 
 interface Product {
   id: string;
@@ -30,9 +31,15 @@ export default function ProductPage(): JSX.Element {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [product, setProduct] = useState<Product | null>(null);
   const [images, setImages] = useState<Image[]>([]);
-
+  const [user, setUser] = useState<{ data: { id: string; email: string; name: string } } | null>(null);
+  const [rentStartDate, setRentStartDate] = useState<string>("");
+  const [rentEndDate, setRentEndDate] = useState<string>("");
+  const [cart, setCart] = useState<{ data: { id: string; total_price: number; total_quantity: number, user_id: string } } | null>(null);
+  const [alert, setAlert] = useState({ show: false, message: '' });
+  const [isVisible, setIsVisible] = useState(true);
+  
   useEffect(() => {
-    if (!id){
+    if (!id) {
       console.log(id);
       return;
     }
@@ -73,10 +80,87 @@ export default function ProductPage(): JSX.Element {
     };
 
     fetchData();
+    fetchUser();
   }, [id]);
+
+  useEffect(() => {
+    if (user) {
+      fetchCart(user.data.id);
+      console.log("fetch cart");
+    }
+  }, [user]);
 
   const handleQuantityChange = (type: QuantityChangeType): void => {
     setQuantity((prev) => (type === "increase" ? prev + 1 : Math.max(prev - 1, 1)));
+  };
+
+  const getTokenFromCookies = () => {
+    const cookies = document.cookie.split('; ');
+    const tokenCookie = cookies.find((cookie) => cookie.startsWith('auth-token='));
+    return tokenCookie ? tokenCookie.split('=')[1] : null;
+  };
+
+  const fetchCart = async (userId: string) => {
+    try {
+      const token = getTokenFromCookies();
+
+        if (!token) {
+          console.log('No authentication token found in cookies.');
+          router.push('/login');
+          return;
+        }
+
+      const response = await fetch(`http://localhost:3000/api/v1/cart/` + userId, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCart(data);
+        console.log("Cart data", data);
+        return data;
+      } else {
+        console.log('Error fetching cart:', response);
+      }
+    } catch (error) {
+      console.log('Error fetching cart:', error);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const token = getTokenFromCookies();
+
+      if (!token) {
+        console.log('No authentication token found in cookies.');
+        router.push('/login');
+        return;
+      }
+
+      // Fetch user data
+      const userResponse = await fetch('http://localhost:3000/api/v1/auth/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!userResponse.ok) {
+        console.log('Failed to fetch user data');
+        router.push('/login');
+        return;
+      }
+
+      const userData = await userResponse.json();
+      setUser(userData);
+    } catch (error) {
+      console.log('Error fetching user or cart data:', error);
+    } 
   };
 
   const handleImageChange = (direction: "prev" | "next"): void => {
@@ -88,6 +172,82 @@ export default function ProductPage(): JSX.Element {
     });
   };
 
+  const handleAddToCart = async (): Promise<void> => {
+    if (!product) return;
+
+    const formattedRentStartDate = rentStartDate
+    ? new Date(rentStartDate).toISOString()
+    : null;
+  const formattedRentEndDate = rentEndDate
+    ? new Date(rentEndDate).toISOString()
+    : null;
+
+    if (!formattedRentStartDate || !formattedRentEndDate) {
+      console.error("Both rent start and end dates must be selected.");
+      return;
+    }
+      const startDate = new Date(formattedRentStartDate);
+    const endDate = new Date(formattedRentEndDate);
+    const durationInDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (durationInDays <= 0) {
+      console.error("Invalid rental period.");
+      return;
+    }
+
+    // Hitung total harga
+    const totalPrice = durationInDays * product.price * quantity;
+
+    const cartProductData = {
+      product_id: product.id,
+      cart_id: cart?.data.id,
+      quantity: quantity,
+      price: totalPrice,
+      rent_start_date: formattedRentStartDate,
+      rent_end_date: formattedRentEndDate,
+    };
+
+    try {
+      const token = getTokenFromCookies();
+
+      if (!token) {
+        console.log('No authentication token found in cookies.');
+        router.push('/login');
+        return;
+      }
+
+      console.log(cartProductData);
+      const response = await fetch("http://localhost:3000/api/v1/cart_product/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(cartProductData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status) {
+          console.log("Product added to cart:", data);
+          // Optionally, redirect or update UI to reflect cart update
+          setAlert({
+            show: true,
+            message: "Product added to cart",
+        });
+        } else {
+          console.error("Failed to add product to cart:", data.error);
+        }
+      } else {
+        console.error("Failed to create cart product");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -95,6 +255,17 @@ export default function ProductPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavigationBar />
+      {alert.show && (
+        <Alert
+          color="success"
+          title="Product added to cart"
+          variant="faded"
+          isVisible={isVisible}
+          onClose={() => setIsVisible(false)}
+        >
+          {alert.message}
+        </Alert>
+      )}
       <main className="container mx-auto p-6">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1">
@@ -154,21 +325,28 @@ export default function ProductPage(): JSX.Element {
               <div className="space-y-2">
                 <label>Select rental start date:</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="border px-3 py-2 rounded w-full"
+                  value={rentStartDate}
+                  onChange={(e) => setRentStartDate(e.target.value)}
                 />
               </div>
 
               <div className="space-y-2">
                 <label>Select rental end date:</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="border px-3 py-2 rounded w-full"
+                  value={rentEndDate}
+                  onChange={(e) => setRentEndDate(e.target.value)}
                 />
               </div>
             </div>
 
-            <button className="w-full bg-blue-500 text-white py-3 rounded-lg shadow hover:bg-blue-600">
+            <button
+              className="w-full bg-blue-500 text-white py-3 rounded-lg shadow hover:bg-blue-600"
+              onClick={handleAddToCart}
+            >
               ADD TO CART
             </button>
           </div>

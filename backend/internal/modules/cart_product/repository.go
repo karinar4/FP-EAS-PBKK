@@ -27,6 +27,26 @@ func (r *cartProductRepository) CreateCartProduct(data *CartProductModel) (*Cart
 	if err := r.db.Create(data).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseCreateFailed, err.Error())
 	}
+
+	var cartProducts []CartProductModel
+    if err := r.db.Where("cart_id = ?", data.CartID).Find(&cartProducts).Error; err != nil {
+        return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
+    }
+
+	totalQuantity := 0
+    totalPrice := float64(0)
+    for _, cartProduct := range cartProducts {
+        totalQuantity += cartProduct.Quantity
+        totalPrice += cartProduct.Price
+    }
+
+	if err := r.db.Model(&cart.CartModel{}).Where("id = ?", data.CartID).Updates(map[string]interface{}{
+        "total_quantity": totalQuantity,
+        "total_price":    totalPrice,
+    }).Error; err != nil {
+        return nil, e.NewApiError(e.ErrDatabaseUpdateFailed, err.Error())
+    }
+
 	return data, nil
 }
 

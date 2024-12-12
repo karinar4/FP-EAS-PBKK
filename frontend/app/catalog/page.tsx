@@ -36,7 +36,100 @@ export default function CatalogPage () {
 
   const itemsPerPage = 16;
 
+  // const [user, setUser] = useState<{ data: { id: string; email: string; name: string } } | null>(null);
+  // const [cartCreated, setCartCreated] = useState(false);
+  // const [cart, setCart] = useState<{ data: { id: string; total_price: number; total_quantity: number, user_id: string } } | null>(null);
+
+  const getTokenFromCookies = () => {
+    const cookies = document.cookie.split('; ');
+    const tokenCookie = cookies.find((cookie) => cookie.startsWith('auth-token='));
+    return tokenCookie ? tokenCookie.split('=')[1] : null;
+  };
+
   useEffect(() => {
+    const fetchUserDataAndCart = async () => {
+      try {
+        const token = getTokenFromCookies();
+
+        if (!token) {
+          console.log('No authentication token found in cookies.');
+          router.push('/login');
+          return;
+        }
+
+        // Fetch user data
+        const userResponse = await fetch('http://localhost:3000/api/v1/auth/me', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!userResponse.ok) {
+          console.log('Failed to fetch user data');
+          router.push('/login');
+          return;
+        }
+
+        const userData = await userResponse.json();
+        // setUser(userData);
+
+        const cartResponse = await fetch(`http://localhost:3000/api/v1/cart/${userData.data.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (cartResponse.ok) {
+          const cartData = await cartResponse.json();
+          if (cartData.data) {
+            console.log('Cart exists:', cartData);
+            // setCartCreated(true);
+            // setCart(cartData);
+            console.log(cartData);
+          } else {
+            console.log('No cart found, creating cart...');
+            await createCart(userData.data.id, token);
+          }
+        } else {
+          console.log('Error fetching cart data:', cartResponse);
+          createCart(userData.data.id, token);
+        }
+      } catch (error) {
+        console.log('Error fetching user or cart data:', error);
+        createCart(userData.data.id, token);
+      } 
+    };
+
+    const createCart = async (userId: string, token: string) => {
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/cart/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ user_id: userId }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Cart created:', data);
+          // setCart(data);
+          // setCartCreated(true);
+        } else {
+          console.log('Error creating cart:', response);
+        }
+      } catch (error) {
+        console.log('Error creating cart:', error);
+      }
+    };
+
+    fetchUserDataAndCart();
+
     const fetchProducts = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/v1/product/`);
@@ -73,10 +166,11 @@ export default function CatalogPage () {
         console.error("Failed to fetch categories:", error);
       }
     };
-
+    
     fetchProducts();
     fetchCategories();
   }, []);
+  
 
   const handlePageChange = (page: any) => setCurrentPage(page);
 

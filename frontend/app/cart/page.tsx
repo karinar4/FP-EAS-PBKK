@@ -250,11 +250,27 @@ export default function Cart() {
     }
   };
 
-  const handleQuantityChange = (cartId: string, productId: string, change: number) => {
+  const handleQuantityChange = (cartId: string, productId: string, change: number, startDate: any, endDate: any) => {
+    let start, end
+    if (typeof startDate == "string"){
+      start = parseAbsolute(startDate, "Asia/Bangkok");
+    } else if (typeof startDate == "object") {
+      start = startDate
+    }
+
+    if (typeof endDate == "string"){
+      end = parseAbsolute(endDate, "Asia/Bangkok");
+    } else if (typeof endDate == "object") {
+      end = endDate
+    }
+      
+    const duration = Math.ceil((end.toDate().getTime() - start.toDate().getTime()) / (1000 * 60 * 60 * 24)); // Duration in days
+    console.log("Duration in days:", duration);
+
     const updatedCartProducts = cartProducts.map((cartProduct) => {
       if (cartProduct.cart_id === cartId && cartProduct.product.id === productId) {
         const updatedQuantity = Math.max(Math.min(cartProduct.quantity + change, cartProduct.product.stock), 1);
-        const updatedPrice = updatedQuantity * cartProduct.product.price;
+        const updatedPrice = updatedQuantity * cartProduct.product.price * duration;
   
         if (updatedQuantity !== cartProduct.quantity || updatedPrice !== cartProduct.price) {
           return { ...cartProduct, quantity: updatedQuantity, price: updatedPrice };
@@ -358,7 +374,7 @@ export default function Cart() {
             </TableHeader>
             <TableBody>
               {cartProducts.map((cartProduct) => (
-                <TableRow key={cartProduct.product.id}>
+                <TableRow key={`${cartProduct.product.id}-${cartProduct.rent_start_date}-${cartProduct.rent_start_date}-${cartProduct.quantity}-${cartProduct.price}`}>
                   <TableCell className='py-4'>{cartProduct.product.name}</TableCell>
                   <TableCell className='py-4'>{cartProduct.product.price}</TableCell>
                   <TableCell className='py-4'>
@@ -395,13 +411,13 @@ export default function Cart() {
                   </TableCell>
                   <TableCell className='py-4'>
                     <div className='flex flex-row items-center justify-center rounded-full border border-gray-300 w-24 h-8'>
-                      <button className='text-xl pl-4' onClick={() => handleQuantityChange(cartProduct.cart_id, cartProduct.product.id, -1)}>
+                      <button className='text-xl pl-4' onClick={() => handleQuantityChange(cartProduct.cart_id, cartProduct.product.id, -1, cartProduct.rent_start_date, cartProduct.rent_end_date)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                           <path d="M19 13H5C4.44772 13 4 13.4477 4 14C4 14.5523 4.44772 15 5 15H19C19.5523 15 20 14.5523 20 14C20 13.4477 19.5523 13 19 13Z" />
                         </svg>
                       </button>
                       <p className='px-4'>{cartProduct.quantity}</p>
-                      <button className='text-xl pr-4' onClick={() => handleQuantityChange(cartProduct.cart_id, cartProduct.product.id, 1)}>
+                      <button className='text-xl pr-4' onClick={() => handleQuantityChange(cartProduct.cart_id, cartProduct.product.id, 1, cartProduct.rent_start_date, cartProduct.rent_end_date)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                           <path d="M19 11H13V5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11Z" />
                         </svg>

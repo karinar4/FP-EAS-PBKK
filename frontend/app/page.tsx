@@ -9,12 +9,6 @@ export default function App() {
     // <Router>
     //   <div>
         <NavigationBar />
-        {/* <Routes> */}
-          {/* <Route path="/" element={<HomePage />} /> */}
-          {/* <Route path="/catalog" element={<CatalogPage />} /> */}
-          {/* <Route path="/product/:id" element={<ProductPage />} /> */}
-        {/* </Routes>
-      </div>
-    </Router> */}
-  );
+  )
+        
 }

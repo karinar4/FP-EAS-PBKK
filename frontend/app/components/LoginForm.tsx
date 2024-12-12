@@ -23,7 +23,7 @@ export default function LoginForm() {
       if (role === 'admin') {
         router.push('/admin/dashboard');
       } else {
-        router.push('/dashboard');
+        router.push('/catalog');
       }
     }
   }

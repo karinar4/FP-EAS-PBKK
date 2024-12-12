@@ -22,11 +22,22 @@ func NewCartRepository(db *gorm.DB) ICartRepository {
 }
 
 func (r *cartRepository) CreateCart(data *CartModel) (*CartModel, e.ApiError) {
+	// Cek apakah cart dengan user_id dan product_id sudah ada
+	var existingCart CartModel
+	if err := r.db.Where("user_id = ?", data.UserID).First(&existingCart).Error; err == nil {
+		// Jika ada, berarti cart sudah ada, kembalikan error atau lakukan update jika diperlukan
+		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, "Cart item already exists")
+	}
+
+	// Jika tidak ada duplikasi, buat cart baru
 	if err := r.db.Create(data).Error; err != nil {
 		return nil, e.NewApiError(e.ErrDatabaseCreateFailed, err.Error())
 	}
+
+	// Kembalikan data yang berhasil dibuat
 	return data, nil
 }
+
 
 func (r *cartRepository) GetCartByUserID(userID uuid.UUID) (*CartModel, e.ApiError) {
 	cart := &CartModel{}
