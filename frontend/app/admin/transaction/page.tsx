@@ -126,7 +126,7 @@ export default function TransactionAdmin() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="warning"
                 name={user ? user.data.name : "Guest"}
                 size="sm"
                 src="https://images.unsplash.com/broken"
@@ -147,7 +147,7 @@ export default function TransactionAdmin() {
 
       <div className="min-h-screen bg-gray-200 text-gray-800">
         <main className="container flex gap-8">
-          <Sidebar />
+          <Sidebar className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm h-screen"/>
           <div className="flex-1">
             <div className="p-8 flex justify-between">
               <h1 className="text-3xl font-bold text-black">Transactions</h1>
@@ -186,7 +186,7 @@ export default function TransactionAdmin() {
                               </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                              <DropdownItem key="edit">View Details</DropdownItem>
+                              <DropdownItem key="edit" onClick={() => router.push(`/admin/transaction/update/${transaction.id}`)}>View Details</DropdownItem>
                             </DropdownMenu>
                           </Dropdown>
                         </div>

@@ -345,7 +345,7 @@ export default function ProductPage(): JSX.Element {
             </div>
 
             <button
-              className="w-full bg-blue-500 text-white py-3 rounded-lg shadow hover:bg-blue-600"
+              className="w-full bg-yellow-500 text-white py-3 rounded-lg shadow hover:bg-yellow-600"
               onClick={handleAddToCart}
             >
               ADD TO CART

@@ -121,7 +121,7 @@ export default function Transaction() {
                         })()
                     }
                     <Chip color="warning" variant="solid" className="text-md p-4">
-                      {transaction.status}
+                      {transaction.status === "completed" ? "Completed" : transaction.status === "pending" ? "Pending" : transaction.status === "in_progress" ? "In Progress" : "Failed"}
                     </Chip>
                   </div>
                   <Divider className="my-4" />

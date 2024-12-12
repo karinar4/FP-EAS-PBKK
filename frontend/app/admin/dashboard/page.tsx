@@ -55,30 +55,26 @@ export default function Home() {
     };
   
   return (
-    <div className="flex bg-gray-50 h-screen w-full">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        {/* Navigation Bar */}
-        <div className="bg-white w-full shadow-sm">
-          <Navbar maxWidth="full">
+    <>
+    <Navbar maxWidth="full">
             <NavbarContent as="div" justify="end">
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
                   <Avatar
-                    showFallback 
+                    showFallback
                     isBordered
                     as="button"
                     className="transition-transform"
-                    color="secondary"
-                    name={user? user.data.name : "Guest"}
+                    color="warning"
+                    name={user ? user.data.name : "Guest"}
                     size="sm"
                     src="https://images.unsplash.com/broken"
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem key="profile" className="h-14 gap-2">
-                  <p className="font-semibold">Signed in as</p>
-                  <p className="font-semibold">{ user?.data.email }</p>
+                    <p className="font-semibold">Signed in as</p>
+                    <p className="font-semibold">{user?.data.email}</p>
                   </DropdownItem>
                   <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                     Log Out
@@ -87,12 +83,19 @@ export default function Home() {
               </Dropdown>
             </NavbarContent>
           </Navbar>
-        </div>
-        
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-black">Admin Dashboard</h1>
-        </div>
-      </div>
-    </div>
+    
+          <div className="min-h-screen bg-gray-200 text-gray-800">
+            <main className="container flex gap-8">
+              <Sidebar className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm h-screen"/>
+              <div className="flex-1">
+                <div className='flex-1 w-full'>
+                  <div className="p-8 flex justify-between">
+                    <h1 className="text-3xl font-bold text-black">Dashboard</h1>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+          </>
   );
 }

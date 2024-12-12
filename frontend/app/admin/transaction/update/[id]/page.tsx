@@ -4,17 +4,30 @@ import React, { useState, useEffect } from "react";
 import { Navbar, NavbarContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Input, Form, Button, Card, CardBody, Select, SelectItem, Alert } from "@nextui-org/react";
 import LogoutButton from '@/app/components/LogoutButton';
 import { useRouter, useParams } from 'next/navigation';
+import Transaction from "@/app/transaction/page";
 
-export default function CreateBrandForm() {
-//   const { id } = useParams(); // Get product ID from URL params
+
+
+export default function UpdateTransactionForm() {
+  const Status = {
+    pending: "pending",
+    in_progress: "in_progress",
+    completed: "completed",
+    cancelled: "cancelled"
+  };
+
+  const { id } = useParams(); // Get product ID from URL params
   const [formData, setFormData] = useState({
-    name: "",
+    transaction_date: "",
+    total_quantity: 0,
+    total_price: 0.0,
+    status: Status.pending,
   });
-//   const [categories, setCategories] = useState([]);
-//   const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [alert, setAlert] = useState({ show: false, message: '' });
   const [isVisible, setIsVisible] = useState(true);
-  const [user, setUser] = useState<{ data: { email: string; name: string } } | null>(null);
+  const [user, setUser] = useState<{ data: { id: string; email: string; name: string } } | null>(null);
   const router = useRouter();
 
   const getTokenFromCookies = () => {
@@ -49,14 +62,14 @@ export default function CreateBrandForm() {
       }
     };
 
-    const fetchBrand = async () => {
+    const fetchTransactionData = async () => {
       try {
         const token = getTokenFromCookies();
         if (!token) {
           throw new Error('No authentication token found in cookies.');
         }
 
-        const response = await fetch(`http://localhost:3000/api/v1/brand/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/v1/transaction/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -64,22 +77,41 @@ export default function CreateBrandForm() {
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch brand');
+          throw new Error('Failed to fetch transaction');
         }
         const data = await response.json();
+        console.log(data);
+        const transactionDate = new Date(data.data.transaction_date);
         setFormData({
-          name: data.data.name,
+          // name: data.data.name,
+          // description: data.data.description,
+          // price: data.data.price,
+          // stock: data.data.stock,
+          // category_id: data.data.category_id,
+          // brand_id: data.data.brand_id,
+          transaction_date: transactionDate.toLocaleString(),
+          total_quantity: data.data.total_quantity,
+          total_price: data.data.total_price,
+          status: data.data.status,
         });
       } catch (error) {
-        console.error('Error fetching brand:', error);
+        console.error('Error fetching transaction:', error);
       }
     };
 
     fetchUserData();
-  }, []);
+    fetchTransactionData(); // Fetch product data to pre-fill form
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "total_quantity" || name === "total_price" ? Number(value) : value,
+    }));
+  };
+
+  const handleSelectChange = (name, value) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -97,32 +129,29 @@ export default function CreateBrandForm() {
         throw new Error('No authentication token found in cookies.');
       }
 
-      const response = await fetch(`http://localhost:3000/api/v1/brand/`, {
-        method: "POST", // Use PUT for updating
+      console.log(formData);
+      const response = await fetch(`http://localhost:3000/api/v1/transaction/${id}`, {
+        method: "PUT", // Use PUT for updating
         headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          ...formData,
+          status: formData.status.currentKey,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create brand");
+        throw new Error("Failed to update product");
       } else {
         const data = await response.json();
         setAlert({
           show: true,
-          message: "Brand created successfully!",
+          message: "Product updated successfully!",
         });
       }
-
-      setFormData({
-        name: "",
-      });
     } catch (error) {
-      console.error("Error updating brand:", error);
+      console.error("Error updating transaction:", error);
     }
   };
 
@@ -165,7 +194,7 @@ export default function CreateBrandForm() {
       {alert.show && (
         <Alert
           color="success"
-          title="Product created successfully"
+          title="Product updated successfully"
           variant="faded"
           isVisible={isVisible}
           onClose={() => setIsVisible(false)}
@@ -175,25 +204,65 @@ export default function CreateBrandForm() {
       )}
 
       <main className="flex flex-col p-6 bg-gray-50 h-screen items-center">
-        <h1 className="font-bold text-gray-800 text-2xl mb-6">Create Brand</h1>
+        <h1 className="font-bold text-gray-800 text-2xl mb-6">Update Product</h1>
         <Card shadow="sm" className="p-3 w-[500px] items-center">
           <CardBody>
             <Form className="items-center" onSubmit={handleSubmit}>
               <Input
                 type="text"
-                name="name"
-                label="Name"
+                name="transaction_date"
+                label="Transaction Date"
                 labelPlacement="outside"
-                value={formData.name}
-                onChange={handleChange}
+                value={formData.transaction_date}
+                // onChange={handleChange}
                 className="mb-4"
-                isRequired
+                // isRequired
               />
+              <Input
+                type="number"
+                name="total_quantity"
+                label="Total Quantity"
+                labelPlacement="outside"
+                value={formData.total_quantity}
+                // onChange={handleChange}
+                className="mb-4"
+                // isRequired
+              />
+              <Input
+                type="number"
+                name="total_price"
+                label="Total Price"
+                labelPlacement="outside"
+                value={formData.total_price}
+                // onChange={handleChange}
+                className="mb-4"
+                // isRequired
+              />
+              <Select
+                label="Status"
+                labelPlacement="outside"
+                selectedKeys={formData.status}
+                onSelectionChange={(value) => handleSelectChange("status", value)}
+                isRequired
+              >
+                <SelectItem key={Status.pending} value={Status.pending}>
+                  Pending
+                </SelectItem>
+                <SelectItem key={Status.in_progress} value={Status.in_progress}>
+                  In Progress
+                </SelectItem>
+                <SelectItem key={Status.completed} value={Status.completed}>
+                  Completed
+                </SelectItem>
+                <SelectItem key={Status.cancelled} value={Status.cancelled}>
+                  Cancelled
+                </SelectItem>
+              </Select>
               <div className="flex gap-5">
                 <Button type="submit" className="text-md font-medium w-40 mt-5 bg-yellow-500" radius="sm">
-                  Create
+                  Update
                 </Button>
-                <Button onClick={() => router.push('/admin/brand')} className="text-md font-medium w-40 mt-5 bg-yellow-500">
+                <Button onClick={() => router.push('/admin/transaction/')} className="text-md font-medium w-40 mt-5 bg-yellow-500">
                   Back
                 </Button>
               </div>

@@ -179,7 +179,7 @@ export default function UpdateBrandForm() {
       )}
 
       <main className="flex flex-col p-6 bg-gray-50 h-screen items-center">
-        <h1 className="font-bold text-gray-800 text-2xl mb-6">Update Product</h1>
+        <h1 className="font-bold text-gray-800 text-2xl mb-6">Update Brand</h1>
         <Card shadow="sm" className="p-3 w-[500px] items-center">
           <CardBody>
             <Form className="items-center" onSubmit={handleSubmit}>

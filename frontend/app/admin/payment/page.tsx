@@ -91,7 +91,7 @@ export default function PaymentAdmin() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="secondary"
+                color="warning"
                 name={user ? user.data.name : "Guest"}
                 size="sm"
                 src="https://images.unsplash.com/broken"
@@ -112,7 +112,7 @@ export default function PaymentAdmin() {
 
       <div className="min-h-screen bg-gray-200 text-gray-800">
         <main className="container flex gap-8">
-          <Sidebar />
+          <Sidebar className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm h-screen"/>
           <div className="flex-1">
             <div className="bg-white w-full shadow-sm"></div>
 

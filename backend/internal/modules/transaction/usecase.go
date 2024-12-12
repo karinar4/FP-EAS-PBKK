@@ -114,6 +114,11 @@ func (uc *transactionUseCase) GetTransactionByID(id uuid.UUID) (*GetTransactionR
 		TotalQuantity: transaction.TotalQuantity,
 		TotalPrice: transaction.TotalPrice,
 		Status: transaction.Status,
+		User: auth.GetUser{
+			ID:   transaction.User.ID,
+			Name: transaction.User.Name,
+			Email: transaction.User.Email,
+		},
 	}, nil
 }
 

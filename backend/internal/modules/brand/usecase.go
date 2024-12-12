@@ -28,7 +28,6 @@ func (uc *brandUseCase) CreateBrand(req *CreateBrandRequest) (*CreateBrandRespon
 			ID: uuid.New(),
 		},
 		Name: req.Name,
-		Origin: req.Origin,
 	}
 
 	result, err := uc.repo.CreateBrand(brand)
@@ -39,7 +38,6 @@ func (uc *brandUseCase) CreateBrand(req *CreateBrandRequest) (*CreateBrandRespon
 	return &CreateBrandResponse{
 		ID:   result.ID,
 		Name: result.Name,
-		Origin: result.Origin,
 	}, nil
 }
 
@@ -54,7 +52,6 @@ func (uc *brandUseCase) GetAllBrand() (*GetAllBrandResponse, e.ApiError) {
 		response = append(response, GetBrandResponse{
 			ID:   brand.ID,
 			Name: brand.Name,
-			Origin: brand.Origin,
 		})
 	}
 
@@ -70,7 +67,6 @@ func (uc *brandUseCase) GetBrandByID(id uuid.UUID) (*GetBrandResponse, e.ApiErro
 	return &GetBrandResponse{
 		ID:   brand.ID,
 		Name: brand.Name,
-		Origin: brand.Origin,
 	}, nil
 }
 
@@ -83,9 +79,6 @@ func (uc *brandUseCase) UpdateBrand(id uuid.UUID, req *UpdateBrandRequest) (*Upd
 	if req.Name != ""{
 		brand.Name = req.Name
 	}
-	if req.Origin != ""{
-		brand.Origin = req.Origin
-	}
 
 	updatedBrand, updateErr := uc.repo.UpdateBrand(brand)
 	if updateErr != nil {
@@ -95,7 +88,6 @@ func (uc *brandUseCase) UpdateBrand(id uuid.UUID, req *UpdateBrandRequest) (*Upd
 	return &UpdateBrandResponse{
 		ID:   updatedBrand.ID,
 		Name: updatedBrand.Name,
-		Origin: updatedBrand.Origin,
 	}, nil
 }
 

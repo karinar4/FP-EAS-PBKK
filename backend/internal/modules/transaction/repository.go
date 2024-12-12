@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/karinar4/FP-EAS-PBKK/backend/internal/pkg/e"
@@ -42,12 +43,15 @@ func (r *transactionRepository) GetAllTransaction() ([]TransactionModel, e.ApiEr
 
 func (r *transactionRepository) GetTransactionByID(id uuid.UUID) (*TransactionModel, e.ApiError) {
 	transaction := &TransactionModel{}
-	if err := r.db.Where("id = ?", id).First(transaction).Error; err != nil {
+	if err := r.db.Where("id = ?", id).Preload("User").First(transaction).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, e.NewApiError(e.ErrNotFound, "Transaction not found")
 		}
 		return nil, e.NewApiError(e.ErrDatabaseFetchFailed, err.Error())
 	}
+
+	fmt.Println(transaction)
+	
 	return transaction, nil
 }
 

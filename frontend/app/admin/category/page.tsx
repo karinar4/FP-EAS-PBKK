@@ -132,7 +132,7 @@ export default function CategoryAdmin() {
 
       <div className="min-h-screen bg-gray-200 text-gray-800">
         <main className="container flex gap-8">
-          <Sidebar />
+          <Sidebar className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm h-screen"/>
           <div className="flex-1">
             <div className='flex-1 w-full'>
               <div className="p-8 flex justify-between">

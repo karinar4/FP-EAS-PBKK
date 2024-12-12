@@ -4,11 +4,11 @@ import { Button } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const router = useRouter();
 
   return (
-    <aside className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm">
+    <aside className="w-1/4 bg-white border-r border-gray-300 p-6 shadow-sm" {...props}>
       <div>
         <div className="space-y-2">
           <Button onClick={() => router.push('/admin/product')} className="w-full bg-white border border-yellow-400 shadow-sm">
