@@ -11,6 +11,7 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
 
 const CatalogPage = () => {

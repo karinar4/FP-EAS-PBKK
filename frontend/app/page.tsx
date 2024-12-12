@@ -1,9 +1,20 @@
-import NavigationBar from "./components/NavigationBar"
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NavigationBar from './components/NavigationBar';
+import HomePage from './home/page';
+import CatalogPage from './catalog/page';
 
-export default function Home() {
+export default function App() {
   return (
-    <div>
-      <NavigationBar />
-    </div>
+    <Router>
+      <div>
+        <NavigationBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          {/* <Route path="/product/:id" element={<ProductPage />} /> */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
