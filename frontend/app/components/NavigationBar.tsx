@@ -19,7 +19,6 @@ export const AcmeLogo = () => {
 };
 
 export default function NavigationBar() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ data: { email: string; name: string } } | null>(null);
   const router = useRouter();
 
@@ -37,7 +36,7 @@ export default function NavigationBar() {
         if (!token) {
           console.log('No authentication token found in cookies.');
         }
-        
+
         const response = await fetch('http://localhost:3000/api/v1/auth/me', {
           method: 'GET',
           headers: {
@@ -49,10 +48,8 @@ export default function NavigationBar() {
         if (!response.ok) {
           console.log('Failed to fetch user data');
           setUser(null);
-          // setIsLoggedIn(false);
         } else {
           const data = await response.json();
-            // setIsLoggedIn(true);
           setUser(data);
         }
       } catch (error) {
@@ -61,32 +58,32 @@ export default function NavigationBar() {
     };
 
     fetchUserData();
-    // console.log(isLoggedIn);
   }, []);
 
   const handleLogout = () => {
     document.cookie = 'auth-token=; Max-Age=0';
-    // setIsLoggedIn(false);
     setUser(null);
     router.push("/");
   };
-  
+
   return (
     <Navbar position="static" maxWidth="full">
-      <NavbarBrand className="w-1/3">
+      <NavbarBrand className="w-1/3" onClick={() => router.push('/')}>
         <AcmeLogo />
-        <p className="font-bold text-2xl">ACME</p>
+        <p className="font-bold text-2xl cursor-pointer">ACME</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="/about">
-            About
-          </Link>
+          <Link color="foreground" href="/">Home</Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="contact">
-            Contact
-          </Link>
+          <Link color="foreground" href="/catalog">Catalog</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/about">About</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/contact">Contact</Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent as="div" justify="end">
