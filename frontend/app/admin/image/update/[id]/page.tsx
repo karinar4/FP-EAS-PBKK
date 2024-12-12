@@ -8,7 +8,6 @@ import { useRouter, useParams } from 'next/navigation';
 export default function UpdateImageForm() {
     const { id } = useParams();
     const [formData, setFormData] = useState({
-        product_id: "",
         url: "",
     });
     const [products, setProducts] = useState([]);
@@ -68,7 +67,6 @@ export default function UpdateImageForm() {
                 }
                 const data = await response.json();
                 setFormData({
-                    product_id: data.data.name,
                     url: data.data.origin,
                 });
             } catch (error) {
@@ -111,7 +109,7 @@ export default function UpdateImageForm() {
             });
 
             if (!response.ok) {
-                throw new Error("Failed to update brand");
+                throw new Error("Failed to update image");
             } else {
                 const data = await response.json();
                 setAlert({
@@ -121,7 +119,6 @@ export default function UpdateImageForm() {
             }
 
             setFormData({
-                product_id: "",
                 url: "",
             });
         } catch (error) {
@@ -182,16 +179,6 @@ export default function UpdateImageForm() {
                 <Card shadow="sm" className="p-3 w-[500px] items-center">
                     <CardBody>
                         <Form className="items-center" onSubmit={handleSubmit}>
-                            <Input
-                                type="text"
-                                name="product_id"
-                                label="ProductID"
-                                labelPlacement="outside"
-                                value={formData.product_id}
-                                onChange={handleChange}
-                                className="mb-4"
-                                isRequired
-                            />
                             <Input
                                 type="text"
                                 name="url"
