@@ -5,6 +5,7 @@ import LogoutButton from '@/app/components/LogoutButton';
 import Sidebar from '@/app/components/Sidebar';
 import { Navbar, NavbarContent, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
+import CategoryAdmin from '../brand/page';
 
 export const VerticalDotsIcon = ({ size = 24, width, height, ...props }) => {
   return (
@@ -163,7 +164,7 @@ export default function ImageAdmin() {
                                 </Button>
                               </DropdownTrigger>
                               <DropdownMenu>
-                                <DropdownItem key="edit">Edit</DropdownItem>
+                                <DropdownItem key="edit" onClick={() => router.push(`/admin/image/update/${image.id}`)}>Edit</DropdownItem>
                                 <DropdownItem key="delete">Delete</DropdownItem>
                               </DropdownMenu>
                             </Dropdown>
