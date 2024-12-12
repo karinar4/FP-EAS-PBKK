@@ -10,18 +10,29 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Link,
 } from "@nextui-org/react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
+import { useRouter } from "next/navigation";
+// import { usePress } from "@react-aria/interactions";
 
-const CatalogPage = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  thumbnail: string;
+  category: {id: string; name: string;};
+}
+
+export default function CatalogPage () {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("latest");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const router = useRouter();
 
   const itemsPerPage = 16;
 
@@ -32,7 +43,7 @@ const CatalogPage = () => {
         const data = await response.json();
 
         const productsWithImages = await Promise.all(
-          data.data.products.map(async (product) => {
+          data.data.products.map(async (product: any) => {
             const imageResponse = await fetch(
               `http://localhost:3000/api/v1/image/product/${product.id}`
             );
@@ -67,9 +78,9 @@ const CatalogPage = () => {
     fetchCategories();
   }, []);
 
-  const handlePageChange = (page) => setCurrentPage(page);
+  const handlePageChange = (page: any) => setCurrentPage(page);
 
-  const handleCategoryClick = (categoryId) => {
+  const handleCategoryClick = (categoryId: any) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
   };
@@ -102,8 +113,9 @@ const CatalogPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-200 text-gray-800">
-      <NavigationBar />
+    <>
+    <NavigationBar />
+      <div className="min-h-screen bg-gray-200 text-gray-800">
 
       <main className="container mx-auto px-6 py-8 flex gap-8">
         <aside className="w-1/4 bg-gray-100 border-r border-gray-300 p-6 rounded-lg shadow-sm">
@@ -192,7 +204,9 @@ const CatalogPage = () => {
                   />
                 </CardHeader>
                 <CardBody>
-                  <h3 className="text-md font-semibold">{product.name}</h3>
+                  <Link color="foreground" href={`/product/${product.id}`}>
+                    <h3 className="text-md font-semibold">{product.name}</h3>
+                  </Link>
                   <p className="text-primary font-bold">${product.price}</p>
                 </CardBody>
               </Card>
@@ -211,7 +225,6 @@ const CatalogPage = () => {
         </section>
       </main>
     </div>
+    </>
   );
 };
-
-export default CatalogPage;

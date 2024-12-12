@@ -1,20 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
 import HomePage from './home/page';
 import CatalogPage from './catalog/page';
 
 export default function App() {
   return (
-    <Router>
-      <div>
+    // <Router>
+    //   <div>
         <NavigationBar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
+        {/* <Routes> */}
+          {/* <Route path="/" element={<HomePage />} /> */}
+          {/* <Route path="/catalog" element={<CatalogPage />} /> */}
           {/* <Route path="/product/:id" element={<ProductPage />} /> */}
-        </Routes>
+        {/* </Routes>
       </div>
-    </Router>
+    </Router> */}
   );
 }

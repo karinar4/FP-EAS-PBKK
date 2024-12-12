@@ -2,7 +2,7 @@
 
 import NavigationBar from "@/app/components/NavigationBar";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useParams } from "next/navigation";
 
 interface Product {
   id: string;
@@ -23,41 +23,57 @@ interface Image {
 type QuantityChangeType = "increase" | "decrease";
 
 export default function ProductPage(): JSX.Element {
-  // const router = useRouter();
-  // const { id: productId } = router.query;
+  const router = useRouter();
+  const { id } = useParams();
 
   const [quantity, setQuantity] = useState<number>(1);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [product, setProduct] = useState<Product | null>(null);
   const [images, setImages] = useState<Image[]>([]);
-  
-  const productId = "027b9afd-8eb5-48dc-a797-52205a844efe"; // Example product ID
 
   useEffect(() => {
-    if (!productId) return;
+    if (!id){
+      console.log(id);
+      return;
+    }
 
-    fetch(`http://localhost:3000/api/v1/product/${productId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status) {
-          setProduct(data.data);
-        } else {
-          console.error(data.error);
+    const fetchData = async () => {
+      try {
+        // Fetch product details
+        const productResponse = await fetch(
+          `http://localhost:3000/api/v1/product/${id}`
+        );
+        if (!productResponse.ok) {
+          throw new Error("Failed to fetch product details");
         }
-      })
-      .catch((err) => console.error("Failed to fetch product details:", err));
+        const productData = await productResponse.json();
+        if (productData.status) {
+          setProduct(productData.data);
+          console.log("Set Product");
+        } else {
+          console.error(productData.error);
+        }
 
-    fetch(`http://localhost:3000/api/v1/image/product/${productId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status) {
-          setImages(data.data.images);
-        } else {
-          console.error(data.error);
+        // Fetch product images
+        const imagesResponse = await fetch(
+          `http://localhost:3000/api/v1/image/product/${id}`
+        );
+        if (!imagesResponse.ok) {
+          throw new Error("Failed to fetch product images");
         }
-      })
-      .catch((err) => console.error("Failed to fetch product images:", err));
-  }, [productId]);
+        const imagesData = await imagesResponse.json();
+        if (imagesData.status) {
+          setImages(imagesData.data.images);
+        } else {
+          console.error(imagesData.error);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const handleQuantityChange = (type: QuantityChangeType): void => {
     setQuantity((prev) => (type === "increase" ? prev + 1 : Math.max(prev - 1, 1)));
