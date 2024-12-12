@@ -100,6 +100,34 @@ export default function CategoryAdmin() {
     router.push("/");
   };
 
+  const handleDelete = async (brandId: number) => {
+    try {
+      const token = document.cookie.split('; ').find(cookie => cookie.startsWith('auth-token='))?.split('=')[1];
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`http://localhost:3000/api/v1/brand/${brandId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setBrands(prevBrands => prevBrands.filter(brand => brand.id !== brandId));
+        alert('Brand deleted successfully!');
+      } else {
+        throw new Error('Failed to delete brand');
+      }
+    } catch (error) {
+      console.error('Error deleting brand:', error);
+      alert('Failed to delete brand');
+    }
+  };
+
+
   return (
     <>
       <Navbar maxWidth="full">
@@ -137,7 +165,7 @@ export default function CategoryAdmin() {
             <div className='flex-1 w-full'>
               <div className="p-8 flex justify-between">
                 <h1 className="text-3xl font-bold text-black">Brand</h1>
-                <Button className="bg-yellow-500 font-medium" onClick={() => router.push('/admin/category/create')}>Create New</Button>
+                <Button className="bg-yellow-500 font-medium" onClick={() => router.push('/admin/brand/create')}>Create New</Button>
               </div>
 
               {brands && brands.length > 0 ? (
@@ -145,6 +173,7 @@ export default function CategoryAdmin() {
                   <TableHeader>
                     <TableColumn>Id</TableColumn>
                     <TableColumn>Brand</TableColumn>
+                    <TableColumn>Origin</TableColumn>
                     <TableColumn> </TableColumn>
                   </TableHeader>
                   <TableBody>
@@ -152,6 +181,7 @@ export default function CategoryAdmin() {
                       <TableRow key={brand.id}>
                         <TableCell className="py-4">{brand.id}</TableCell>
                         <TableCell className="py-4">{brand.name}</TableCell>
+                        <TableCell className="py-4">{brand.origin}</TableCell>
                         <TableCell>
                           <div className="relative flex justify-end items-center gap-2">
                             <Dropdown className="bg-background border-1 border-default-200">
@@ -161,8 +191,8 @@ export default function CategoryAdmin() {
                                 </Button>
                               </DropdownTrigger>
                               <DropdownMenu>
-                                <DropdownItem key="edit">Edit</DropdownItem>
-                                <DropdownItem key="delete">Delete</DropdownItem>
+                                <DropdownItem key="edit" onClick={() => router.push(`/admin/brand/update/${brand.id}`)}>Edit</DropdownItem>
+                                <DropdownItem key="delete" onClick={() => handleDelete(brand.id)}>Delete</DropdownItem>
                               </DropdownMenu>
                             </Dropdown>
                           </div>

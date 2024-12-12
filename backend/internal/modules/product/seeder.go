@@ -129,120 +129,140 @@ func BrandSeeds(db *gorm.DB) {
 				ID: uuid.New(),
 			},
 			Name: "Parrot Anafi",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "DJI",
+			Origin: "India",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Autel",
+			Origin: "Australia",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Unitree",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "FLIR",
+			Origin: "UK",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "QySea",
+			Origin: "Indonesia",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Inspired Fligth",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Flybotix",
+			Origin: "UK",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Chasing",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "ACSL",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Freefly",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Skydio",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Elistair",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Hexaero",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "AerialX",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Percepto",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Exyn",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Velodyne",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "AscTec",
+			Origin: "USA",
 		},
 		{
 			BaseModels: common.BaseModels{
 				ID: uuid.New(),
 			},
 			Name: "Boston Dynamics",
+			Origin: "USA",
 		},
 	}
 
